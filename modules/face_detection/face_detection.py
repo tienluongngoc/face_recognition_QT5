@@ -2,6 +2,7 @@
 import yaml
 from modules.utils.tensorrt_model import TensorrtInference
 from modules.utils.detection import *
+
 class FaceDetection(TensorrtInference):
     def __init__(self, config_fp) -> None:
         with open(config_fp) as f:
@@ -18,7 +19,7 @@ class FaceDetection(TensorrtInference):
 
         super().__init__(self.onnx, self.engine, self.fp16_mode)
 
-    def detect(self, img):
+    def inference(self, img):
         img = img.numpy()
         pred = self(img)
         return pred.reshape(self.output_shape) 
@@ -40,7 +41,7 @@ class FaceDetection(TensorrtInference):
             img = img.unsqueeze(0)
         return img,orgimg
 
-    def post_process(self, prediction, classes=None, agnostic=False, labels=()):
+    def post_process(self, prediction):
         prediction = torch.from_numpy(prediction)
         nc = prediction.shape[2] - 15 
         xc = prediction[..., 4] > self.confidence_threshold 
@@ -54,13 +55,6 @@ class FaceDetection(TensorrtInference):
         output = [torch.zeros((0, 16), device=prediction.device)] * prediction.shape[0]
         for xi, x in enumerate(prediction): 
             x = x[xc[xi]]
-            if labels and len(labels[xi]):
-                l = labels[xi]
-                v = torch.zeros((len(l), nc + 15), device=x.device)
-                v[:, :4] = l[:, 1:5]
-                v[:, 4] = 1.0  
-                v[range(len(l)), l[:, 0].long() + 15] = 1.0 
-                x = torch.cat((x, v), 0)
             if not x.shape[0]:
                 continue
             x[:, 15:] *= x[:, 4:5]
@@ -71,8 +65,6 @@ class FaceDetection(TensorrtInference):
             else:
                 conf, j = x[:, 15:].max(1, keepdim=True)
                 x = torch.cat((box, conf, x[:, 5:15], j.float()), 1)[conf.view(-1) > self.confidence_threshold]
-            if classes is not None:
-                x = x[(x[:, 5:6] == torch.tensor(classes, device=x.device)).any(1)]
             n = x.shape[0]
             if not n:
                 continue

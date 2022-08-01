@@ -7,4 +7,12 @@ face_detection:
   stride_max: 32
   confidence_threshold: 0.3
   iou_threshold: 0.5
+face_embedding:
+  onnx: models/arcface.onnx
+  engine: models/arcface.trt
+  fp16_mode: False
+  input_shape: [112, 112]
+  output_shape: [512]
+  confidence_threshold: 0.3
+  iou_threshold: 0.5
 
