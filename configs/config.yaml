@@ -1,0 +1,10 @@
+face_detection:
+  onnx: yolov5s_face.onnx
+  engine: yolov5s_face.trt
+  fp16_mode: False
+  input_shape: [640,640]
+  output_shape: [1,25200,16]
+  stride_max: 32
+  confidence_threshold: 0.3
+  iou_threshold: 0.5
+

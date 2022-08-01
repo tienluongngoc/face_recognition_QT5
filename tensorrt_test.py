@@ -233,6 +233,7 @@ def clip_coords(boxes, img_shape):
     boxes[:, 2].clamp_(0, img_shape[1])  # x2
     boxes[:, 3].clamp_(0, img_shape[0])  # y2
 
+
 def scale_coords(img1_shape, coords, img0_shape, ratio_pad=None):
     # Rescale coords (xyxy) from img1_shape to img0_shape
     if ratio_pad is None:  # calculate from img0_shape
@@ -247,6 +248,7 @@ def scale_coords(img1_shape, coords, img0_shape, ratio_pad=None):
     coords[:, :4] /= gain
     clip_coords(coords, img0_shape)
     return coords
+
 
 def scale_coords_landmarks(img1_shape, coords, img0_shape, ratio_pad=None):
     # Rescale coords (xyxy) from img1_shape to img0_shape
@@ -272,6 +274,7 @@ def scale_coords_landmarks(img1_shape, coords, img0_shape, ratio_pad=None):
     coords[:, 8].clamp_(0, img0_shape[1])  # x5
     coords[:, 9].clamp_(0, img0_shape[0])  # y5
     return coords
+
 
 def xyxy2xywh(x):
     # Convert nx4 boxes from [x1, y1, x2, y2] to [x, y, w, h] where xy1=top-left, xy2=bottom-right
@@ -303,6 +306,7 @@ def show_results(img, xyxy, conf, landmarks, class_num):
     label = str(conf)[:5]
     cv2.putText(img, label, (x1, y1 - 2), 0, tl / 3, [225, 255, 255], thickness=tf, lineType=cv2.LINE_AA)
     return img
+
 
 def img_vis(img,orgimg,pred,vis_thres = 0.6):
     '''
@@ -426,10 +430,23 @@ class TensorrtInference():
         # Remove any context from the top of the context stack, deactivating it.
         self.ctx.pop()
 
-onnx_to_tensorrt("yolov5s_face.onnx", "yolov5s_face.trt", True)
+# onnx_to_tensorrt("models/arcface.onnx", "arcface.trt")
+# img,orgimg=img_process("t1.jpg")
+# model=TensorrtInference("yolov5s_face.trt")
+# for i in range(10):
+#     st = time.time()
+#     pred=model(img.numpy()).reshape([1,512]) 
+#     print(time.time()-st)
+# pred = non_max_suppression_face(torch.from_numpy(pred), conf_thres=0.3, iou_thres=0.5)
+# model.destroy()
+# img_vis(img,orgimg,pred)
 
+
+
+# onnx_to_tensorrt("yolov5s_face.onnx", "yolov5s_face.trt", True)
 img,orgimg=img_process("t1.jpg")
 model=TensorrtInference("yolov5s_face.trt")
+# print(img.numpy()).reshape([1,25200,16])
 for i in range(10):
     st = time.time()
     pred=model(img.numpy()).reshape([1,25200,16]) 

@@ -255,3 +255,9 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 logs
+*/jpg
+*.onnx
+*.trt
+*.zip
+utils-
+utils_
