@@ -1,3 +1,4 @@
+from unittest import result
 import numpy as np
 import cv2
 import copy
@@ -262,26 +263,17 @@ def xyxy2xywh(x):
     return y
 
 
-def show_results(img, xyxy, conf, landmarks, class_num):
+def get_bbox(img, xyxy, conf, landmarks):
     h,w,c = img.shape
-    tl = 1 or round(0.002 * (h + w) / 2) + 1  # line/font thickness
     x1 = int(xyxy[0]*w - xyxy[2]*w/2)
     y1 = int(xyxy[1]*h - xyxy[3]*h/2)
     x2 = int(xyxy[0]*w + xyxy[2]*w/2)
     y2 = int(xyxy[1]*h + xyxy[3]*h/2)
-    
-    cv2.rectangle(img, (x1,y1), (x2, y2), (0,255,0), thickness=tl, lineType=cv2.LINE_AA)
-    clors = [(255,0,0),(0,255,0),(0,0,255),(255,255,0),(0,255,255)]
-
     for i in range(5):
         point_x = int(landmarks[2 * i]*w)
         point_y = int(landmarks[2 * i + 1]*h)
-        cv2.circle(img, (point_x, point_y), tl+1, clors[i], -1)
-
-    tf = max(tl - 1, 1)  # font thickness
-    label = str(conf)[:5]
-    cv2.putText(img, label, (x1, y1 - 2), 0, tl / 3, [225, 255, 255], thickness=tf, lineType=cv2.LINE_AA)
-    return img
+    result = [x1, y1, x2, y2, point_x, point_y, float(str(conf)[:5])]
+    return result
 
 
 def img_vis(img,orgimg,pred,vis_thres = 0.6):

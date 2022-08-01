@@ -41,7 +41,7 @@ class FaceDetection(TensorrtInference):
             img = img.unsqueeze(0)
         return img,orgimg
 
-    def post_process(self, prediction):
+    def nms(self, prediction):
         prediction = torch.from_numpy(prediction)
         nc = prediction.shape[2] - 15 
         xc = prediction[..., 4] > self.confidence_threshold 
@@ -68,7 +68,7 @@ class FaceDetection(TensorrtInference):
             n = x.shape[0]
             if not n:
                 continue
-            c = x[:, 15:16] * (0 if agnostic else max_wh)
+            c = x[:, 15:16] * max_wh
             boxes, scores = x[:, :4] + c, x[:, 4]
             i = torchvision.ops.nms(boxes, scores, self.iou_threshold) 
             if merge and (1 < n < 3E3):
@@ -81,6 +81,26 @@ class FaceDetection(TensorrtInference):
             if (time.time() - t) > time_limit:
                 break 
         return output
+
+    def post_process(self, img,orgimg,pred):
+        pred = self.nms(pred)
+        no_vis_nums=0
+        results = []
+        for i, det in enumerate(pred):
+            gn = torch.tensor(orgimg.shape)[[1, 0, 1, 0]]
+            gn_lks = torch.tensor(orgimg.shape)[[1, 0, 1, 0, 1, 0, 1, 0, 1, 0]]
+            if len(det):
+                det[:, :4] = scale_coords(img.shape[2:], det[:, :4], orgimg.shape).round()
+                for c in det[:, -1].unique():
+                    n = (det[:, -1] == c).sum()
+                det[:, 5:15] = scale_coords_landmarks(img.shape[2:], det[:, 5:15], orgimg.shape).round()
+                for j in range(det.size()[0]):
+                    xywh = (xyxy2xywh(det[j, :4].view(1, 4)) / gn).view(-1).tolist()
+                    conf = det[j, 4].cpu().numpy()
+                    landmarks = (det[j, 5:15].view(1, 10) / gn_lks).view(-1).tolist()
+                    result = get_bbox(orgimg, xywh, conf, landmarks)
+                    results.append(result)
+        return results
 
     def __del__(self):
         self.destroy()
