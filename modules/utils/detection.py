@@ -269,10 +269,13 @@ def get_bbox(img, xyxy, conf, landmarks):
     y1 = int(xyxy[1]*h - xyxy[3]*h/2)
     x2 = int(xyxy[0]*w + xyxy[2]*w/2)
     y2 = int(xyxy[1]*h + xyxy[3]*h/2)
+    result = [x1,y1,x2,y2]
     for i in range(5):
         point_x = int(landmarks[2 * i]*w)
         point_y = int(landmarks[2 * i + 1]*h)
-    result = [x1, y1, x2, y2, point_x, point_y, float(str(conf)[:5])]
+        result.append(point_x)
+        result.append(point_y)
+    result.append(float(str(conf)[:5]))
     return result
 
 
