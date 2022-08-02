@@ -7,7 +7,7 @@ import cv2
 import torch
 
 face_det = FaceDetection("configs/config.yaml")
-img = cv2.imread("sample.jpg")
+img = cv2.imread("images/face_det.jpg")
 img,orgimg =  face_det.pre_process(img)
 pred = face_det.inference(img)
 pred = face_det.post_process(img,orgimg,pred)

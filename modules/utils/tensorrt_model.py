@@ -3,6 +3,7 @@ import pycuda.driver as cuda
 import tensorrt as trt
 import numpy as np
 import os
+from modules.utils.logger import Logger
 
 EXPLICIT_BATCH = 1 << (int)(trt.NetworkDefinitionCreationFlag.EXPLICIT_BATCH)
 TRT_LOGGER = trt.Logger(trt.Logger.WARNING)
@@ -12,19 +13,22 @@ def GiB(val):
 class TensorrtInference():
     def __init__(self,onnx_path=None,trt_path=None,fp16_mode = False):
         self.ctx=cuda.Device(0).make_context()
-        stream = cuda.Stream()
+        self.logger = Logger.__call__().get_logger()
         TRT_LOGGER = trt.Logger(trt.Logger.INFO)
+        stream = cuda.Stream()
         runtime = trt.Runtime(TRT_LOGGER)
-
-        # Deserialize the engine from file
+        
         if os.path.exists(trt_path):
             with open(trt_path, "rb") as f:
                 engine = runtime.deserialize_cuda_engine(f.read())
+                self.logger.info("Load engine successfully...")
         else:
             if os.path.exists(onnx_path):
                 self.onnx_to_tensorrt(onnx_path, trt_path, fp16_mode)
+                self.logger.info(f"exported engine successfully...")
             else:
-                print("Oh nooooooooooooo :)))")
+                self.logger.error(f"{onnx_path} does not exist...")
+                exit(1)
         context = engine.create_execution_context()
 
         host_inputs = []
@@ -34,15 +38,12 @@ class TensorrtInference():
         bindings = []
 
         for binding in engine:
-            print('bingding:', binding, engine.get_binding_shape(binding))
+            self.logger.info("bingding: {} {}".format(binding, engine.get_binding_shape(binding)))
             size = trt.volume(engine.get_binding_shape(binding)) * engine.max_batch_size
             dtype = trt.nptype(engine.get_binding_dtype(binding))
-            # Allocate host and device buffers
             host_mem = cuda.pagelocked_empty(size, dtype)
             cuda_mem = cuda.mem_alloc(host_mem.nbytes)
-            # Append the device buffer to device bindings.
             bindings.append(int(cuda_mem))
-            # Append to the appropriate list.
             if engine.binding_is_input(binding):
                 self.input_w = engine.get_binding_shape(binding)[-1]
                 self.input_h = engine.get_binding_shape(binding)[-2]
@@ -52,7 +53,6 @@ class TensorrtInference():
                 host_outputs.append(host_mem)
                 cuda_outputs.append(cuda_mem)
 
-        # Store
         self.stream = stream
         self.context = context
         self.engine = engine
@@ -65,7 +65,6 @@ class TensorrtInference():
     
     def __call__(self,img_np_nchw):
         self.ctx.push()
-        # Restore
         stream = self.stream
         context = self.context
         engine = self.engine
@@ -85,7 +84,6 @@ class TensorrtInference():
 
 
     def destroy(self):
-        # Remove any context from the top of the context stack, deactivating it.
         self.ctx.pop()
 
     def onnx_to_tensorrt(self, onnx_model_path=None,trt_engine_path=None,fp16_mode=False):

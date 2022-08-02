@@ -1,6 +1,6 @@
 face_detection:
-  onnx: yolov5s_face.onnx
-  engine: yolov5s_face.trt
+  onnx: models/yolov5n_face.onnx
+  engine: models/yolov5n_face.trt
   fp16_mode: False
   input_shape: [640,640]
   output_shape: [1,25200,16]
