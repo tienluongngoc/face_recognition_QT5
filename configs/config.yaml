@@ -15,4 +15,7 @@ face_embedding:
   output_shape: [512]
   confidence_threshold: 0.3
   iou_threshold: 0.5
+video_reader:
+  uri: small_talk.mp4
+
 

@@ -2,14 +2,7 @@ import datetime
 import logging
 import time
 import os
-
-class SingletonType(type):
-    _instances = {}
-
-    def __call__(cls, *args, **kwargs):
-        if cls not in cls._instances:
-            cls._instances[cls] = super(SingletonType, cls).__call__(*args, **kwargs)
-        return cls._instances[cls]
+from .utils import SingletonType
 
 class Logger(object, metaclass=SingletonType):
     _logger = None
@@ -36,8 +29,3 @@ class Logger(object, metaclass=SingletonType):
 
     def get_logger(self):
         return self._logger
-
-# if __name__ == "__main__":
-#     logger = Logger.__call__().get_logger()
-#     logger.info("Hello, Logger")
-#     logger.debug("bug occured")
