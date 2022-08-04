@@ -100,7 +100,13 @@ class FaceDetection(TensorrtInference):
                     landmarks = (det[j, 5:15].view(1, 10) / gn_lks).view(-1).tolist()
                     result = get_bbox(orgimg, xywh, conf, landmarks)
                     results.append(result)
-        return results
+        face_objects = []
+        for obj in results:
+            bbox = [obj[0], obj[1], obj[2], obj[3]]
+            lms = [[obj[4], obj[5]],[obj[6], obj[7]],[obj[8], obj[9]],[obj[10], obj[11]],[obj[12], obj[13]]]
+            face_object = {"bbox": bbox, "landmarks": lms, "score": obj[14]}
+            face_objects.append(face_object)
+        return face_objects
 
     def __del__(self):
         self.destroy()

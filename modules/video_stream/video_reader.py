@@ -37,7 +37,8 @@ class VideoReader(Subject, Thread):
                 grabbed, self.frame = self.cap.read()
                 if grabbed == True:
                     time.sleep(self.sleep_time)
-                    frame_data = {"image": self.frame,
+                    img = cv2.imread("images/cr7.jpg")
+                    frame_data = {"image": img,
                                 #   "location": self.location,
                                 #   "camera_id": self.camera_id, 
                                 #   "service_name": self.service_name

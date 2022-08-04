@@ -24,9 +24,14 @@ class FaceRecognition(Thread):
                 image = frame_data["image"]
                 image,org_image =  self.face_detection.pre_process(image)
                 pred = self.face_detection.inference(image)
-                pred = self.face_detection.post_process(image,org_image,pred)
-                print(pred)
-                cv2.imwrite("img.jpg", org_image)
+                pred_objects = self.face_detection.post_process(image,org_image,pred)
+                for pred_object in pred_objects:
+                    face = org_image[pred_object["bbox"][1]:pred_object["bbox"][3],pred_object["bbox"][0]:pred_object["bbox"][2]]
+                    pre_face = self.face_embedding.pre_process(face)
+                    res =  self.face_embedding.inference(pre_face)
+                    print(res.shape)
+                    cv2.imwrite("img.jpg", face)
+                
 
                 # print(image)
                 
