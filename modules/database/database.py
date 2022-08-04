@@ -9,8 +9,12 @@ class Database(object,metaclass=SingletonType):
     
     def __init__(self, config=None):
         self.logger = Logger.__call__().get_logger()
+
+        with open("configs/config.yaml") as f:
+            config = yaml.load(f, Loader=yaml.FullLoader)
+        
         try:
-            database_config = config
+            database_config = config["database"]
             self.host = database_config["host"]
             self.port = database_config["port"]
             self.username = database_config["user_name"]

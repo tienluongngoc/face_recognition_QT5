@@ -1,3 +1,9 @@
+database:
+  host: 192.168.1.140
+  port: 27017
+  user_name: tienln
+  password: tienln
+  database_name: face_database
 face_detection:
   onnx: models/yolov5n_face.onnx
   engine: models/yolov5n_face.trt
@@ -17,5 +23,4 @@ face_embedding:
   iou_threshold: 0.5
 video_reader:
   uri: small_talk.mp4
-
 

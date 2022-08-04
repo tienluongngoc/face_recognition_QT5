@@ -23,6 +23,7 @@ class FaceRecognitionApp:
         self.tasks.append(self.face_recognizer)
     
     def start(self):
+        # self.face_recognizer.insert_people()
         for task in self.tasks:
             task.start()
 
