@@ -1,7 +1,7 @@
 from pathlib import Path
 import shutil
 from fastapi import status, HTTPException
-from database import PersonDatabase
+from src.database import PersonDatabase
 from ..validation import PersonVerify
 from schemas import SimplePerson
 from models import PersonDoc

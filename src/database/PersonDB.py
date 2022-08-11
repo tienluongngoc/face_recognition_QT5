@@ -1,5 +1,5 @@
 from .database import BaseDatabase
-from models import PersonDoc
+from src.models import PersonDoc
 import numpy as np
 
 class PersonDatabase(BaseDatabase):

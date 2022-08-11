@@ -172,7 +172,8 @@ class FaceCRUD:
 		person_doc = PersonDoc(id=person_info["person_id"], name=person_info["person_name"])
 		person_dict = person_doc.dict()
 		person_dict["state"] = state
-		return JSONResponse(
-				status_code=status.HTTP_200_OK,
-				content=person_dict
-			)		
+		return person_dict
+		# return JSONResponse(
+		# 		status_code=status.HTTP_200_OK,
+		# 		content=person_dict
+		# 	)		
