@@ -1,0 +1,12 @@
+model_name: fasnetv2
+remote: false
+model_path: weights/fasnet/v2/model_rminit.onnx
+device: gpu
+input_width: 80
+input_height: 80
+input_names:
+- "input"
+output_names:
+- "output"
+scale: 2.7
+threshold: 0.5

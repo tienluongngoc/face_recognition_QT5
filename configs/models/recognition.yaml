@@ -1,0 +1,7 @@
+dim: 512
+device: cpu
+reload_all_db_delay: 3600
+retrain_delay: 10
+solve_event_delay: 5
+threshold: 0.5
+model_path: "./weights/embed_vector.index"

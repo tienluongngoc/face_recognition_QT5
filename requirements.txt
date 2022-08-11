@@ -1,0 +1,16 @@
+fastapi==0.70.0
+pymongo==3.12.1
+Pillow==8.4.0
+blinker==1.4
+pyyaml==6.0
+onnx==1.10.2
+onnxruntime==1.10.0
+uvicorn==0.15.0
+aiofiles==0.7.0
+python-multipart==0.0.5
+tritonclient==2.18.0
+opencv-python==4.5.4.58
+requests==2.26.0
+scikit-image==0.17.2
+faiss-gpu==1.7.2
+grpcio==1.41.0
