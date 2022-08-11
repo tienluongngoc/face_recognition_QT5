@@ -3,17 +3,23 @@ from inferences.utils.face_detect import Face
 from models.person import PersonDoc
 from database import PersonDatabase
 from configs import SCRFDConfig, ArcFaceConfig, FaissConfig, FaceRecogAPIConfig
+from .data_queue import DataQueue
 import numpy as np
 from typing import List
+from threading import Thread
+import cv2
 
-class FaceRecognitionApp:
-    def __init__(self) -> None:
+class FaceRecognition(Thread):
+    def __init__(self, recognizer) -> None:
+        Thread.__init__(self)
+        super(FaceRecognition, self).__init__()
+        
+        self.frame_queue = DataQueue.__call__().get_frame_queue()
         global_config = FaceRecogAPIConfig(config_path="configs/face_recog_api.yaml")
-        database = PersonDatabase(global_config.mongodb)
         self.face_detection = SCRFD(global_config.detection)
         self.face_encode = ArcFace(global_config.encode)
-        self.recognizer = FAISS(global_config.recognition, database)
-        self.recognizer.initialize()
+        self.recognizer = recognizer
+
 
     def encode(self, image: np.ndarray) -> np.ndarray:
         detection_results = self.face_detection.detect(image)
@@ -40,26 +46,32 @@ class FaceRecognitionApp:
         detection_largest = [largest_bbox, kps_corr]
         return detection_largest
     
-    def recognize(self, image: np.ndarray):
-        if image is None:
-            raise
-        embed_vector = self.encode(image)
-        if embed_vector.size == 0:
-            return "Nothing"
+    def run(self):
+        while True:
+            image =  self.frame_queue.get()["image"]
+            # image =  cv2.imread("photo_2022-07-04_09-39-31.jpg")
+            # cv2.imwrite("test.jpg", image)
+            if image is None:
+                raise
+            embed_vector = self.encode(image)
+            if embed_vector.size == 0:
+                return "Nothing"
 
-        state = ""
-        face_live = self.check_face_liveness(image)
-        if face_live is not None:
-            if face_live:
-                state = "real"
-            else:
-                state = "fake"
+            state = ""
+            face_live = self.check_face_liveness(image)
+            if face_live is not None:
+                if face_live:
+                    state = "real"
+                else:
+                    state = "fake"
 
-        person_info = self.recognizer.search(embed_vector)
+            person_info = self.recognizer.search(embed_vector)
 
-        #TODO check
-
-        person_doc = PersonDoc(id=person_info["person_id"], name=person_info["person_name"])
-        person_dict = person_doc.dict()
-        person_dict["state"] = state
-        return person_dict
+            # #TODO check
+            try:
+                person_doc = PersonDoc(id=person_info["person_id"], name=person_info["person_name"])
+                person_dict = person_doc.dict()
+                person_dict["state"] = state
+                print(person_dict)
+            except:
+                continue

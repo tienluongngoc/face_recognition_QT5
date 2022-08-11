@@ -16,3 +16,4 @@ logs/*
 db_server
 weights/faiss/embed_vector.index
 images
+*.jpg
