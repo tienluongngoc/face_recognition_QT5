@@ -21,7 +21,6 @@ class FaceRecognition(Thread):
 
         self.face_embedding_collection = self.database["face_embedding"]
         
-
         # img_face = cv2.imread("images/face.jpg")
         # pre_face = self.face_embedding.pre_process(img_face)
         # face_emb =  self.face_embedding.inference(pre_face)
@@ -35,6 +34,7 @@ class FaceRecognition(Thread):
             for db_embedding in person["embedding"]:
                 db_embedding = torch.tensor(db_embedding)
                 output = self.cosi(db_embedding, infe_embedding)
+                print(output)
 
     def run(self):
         while True:
@@ -49,13 +49,8 @@ class FaceRecognition(Thread):
                     pre_face = self.face_embedding.pre_process(face)
                     res =  self.face_embedding.inference(pre_face)
                     infe_embedding = torch.tensor(res.tolist())
-                    # print(infe_embedding)
                     self.recognizer(infe_embedding)
                     
-                    # print(res)
-                    # cv2.imwrite("img.jpg", face)
-                # print(image)
-
     def insert_people(self):
         face_image = "face_images"
         for dir in os.listdir(face_image):
@@ -73,7 +68,6 @@ class FaceRecognition(Thread):
                     face = org_image[pred_object["bbox"][1]:pred_object["bbox"][3],pred_object["bbox"][0]:pred_object["bbox"][2]]
                     pre_face = self.face_embedding.pre_process(face)
                     face_embedding =  self.face_embedding.inference(pre_face)
-                    # print(face_embedding.tolist())
                     face_embedding_list.append(face_embedding.tolist())
             if len (face_embedding_list):
                 self.face_embedding_collection.insert_one({"person_id": f"{dir}","embedding": face_embedding_list})
