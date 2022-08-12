@@ -13,7 +13,7 @@ class SimplePerson(BaseModel):
 		schema_extra = {
 			"example": {
 				"id": "dfasdfas",
-				"name": "hoangnv"
+				"name": "tienln"
 			}
 		}
 

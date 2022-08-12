@@ -37,7 +37,7 @@ class FaceDoc(BaseModel):
 		schema_extra = {
 			"example": {
 				"id": "sdasv",
-				# "imgPath": "/src/hoangnv",
+				# "imgPath": "/src/tienln",
 			}
 		}
 
@@ -56,6 +56,6 @@ class PersonDoc(BaseModel):
 		schema_extra = {
 			"example": {
 				"id": "unique",
-				"name": "hoangnv",
+				"name": "tienln",
 			}
 		}
