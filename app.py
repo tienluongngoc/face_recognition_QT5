@@ -1,3 +1,4 @@
+import re
 import sys
 sys.path.append("./src")
 import cv2
@@ -12,7 +13,10 @@ from src.apps import person_management_instance, face_management_instance
 # person = person_management_instance.select_person_by_id("tienln")
 
 
-# img = cv2.imread("images/cr7.jpg")
-# face_management_instance.insert_face("tienln","125d3s4", img)
+# img = cv2.imread("photo_2022-07-04_09-39-31.jpg")
+# result = face_management_instance.insert_face("tienln","03", img)
+# print(result)
 # print(face_management_instance.select_all_face_of_person("tienln", 0, 10))
-face_management_instance.delete_face_by_id("tienln", "125d34")
+# res = face_management_instance.delete_face_by_id("tienln", "125d34")
+res = face_management_instance.delete_all_face("tienlnd")
+print(res)

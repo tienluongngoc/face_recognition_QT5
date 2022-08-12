@@ -8,6 +8,7 @@ from models import PersonDoc
 from inferences import face_recognizer, ChangeEvent
 import os
 from urllib.parse import unquote
+from schemas import Validation
 
 class PersonManagement:
 	def __init__(self, face_config, db_instance: PersonDatabase) -> None:
@@ -19,7 +20,7 @@ class PersonManagement:
 		id,name = unquote(id), unquote(name)
 		person = SimplePerson(id=id, name=name)
 		if self.verify.check_person_by_id(person.id):
-			raise 
+			Validation.PERSON_ID_ALREADY_EXIST 
 		
 		person_doc = PersonDoc(id=person.id, name=person.name)
 		self.db_instance.personColl.insert_one(person_doc.dict())
@@ -41,7 +42,7 @@ class PersonManagement:
 
 	def select_person_by_id(self, person_id: str, have_vector: bool = False):
 		if not self.verify.check_person_by_id(person_id):
-			raise HTTPException(status.HTTP_404_NOT_FOUND)
+			return Validation.PERSON_ID_NOT_FOUND
 
 		if have_vector:
 			doc = self.db_instance.personColl.find_one(
@@ -56,7 +57,7 @@ class PersonManagement:
 	def update_person_name(self, person_id: str, name: str):
 		person_id, name = unquote(person_id), unquote(name)
 		if not self.verify.check_person_by_id(person_id):
-			raise 
+			return Validation.PERSON_ID_NOT_FOUND 
 		self.db_instance.personColl.update_one(
 			{"id": person_id},
 			{"$set": {"name": name}}
@@ -70,7 +71,7 @@ class PersonManagement:
 	def update_person_id(self, person_id: str, new_id: str):
 		person_id, new_id = unquote(person_id), unquote(new_id)
 		if not self.verify.check_person_by_id(person_id):
-			raise 
+			return Validation.PERSON_ID_NOT_FOUND 
 		self.db_instance.personColl.update_one(
 			{"id": person_id},
 			{"$set": {"id": new_id}}

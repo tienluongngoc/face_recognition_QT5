@@ -7,7 +7,7 @@ import os
 import shutil
 import numpy as np
 from fastapi import HTTPException, status
-from schemas import ImageValidation
+from schemas import ImageValidation,Validation
 from models import EmbeddingVectorDoc, FaceDoc
 from fastapi.responses import JSONResponse
 import uuid
@@ -29,15 +29,15 @@ class FaceManagement:
         person_id, face_id = unquote(person_id), unquote(face_id)
 
         if not self.verify.check_person_by_id(person_id):
-            raise
+            return Validation.PERSON_ID_NOT_FOUND
         if self.verify.check_face_by_id(person_id, face_id):
-            raise
+            return Validation.FACE_ID_ALREADY_EXIST
 
         person_doc = self.db_instance.personColl.find_one(
             {"id": person_id}, {"_id": 0})
 
-        validate_result = self.face_validation.validate_face(image, person_doc)
-        if validate_result == ImageValidation.IMAGE_IS_VALID:
+        image_validation = self.face_validation.validate_face(image, person_doc)
+        if image_validation == ImageValidation.IMAGE_IS_VALID:
             vector = self.face_validation.encode(image)
             vector = npfloat2float(vector)
             embed_doc = EmbeddingVectorDoc(
@@ -60,7 +60,7 @@ class FaceManagement:
                 self.db_instance.personColl.update_one(
                     {"id": person_id}, {"$push": {"faces": face_doc.dict()}}
                 )
-            status_res = True
+            status_res = Validation.CREATED_FACE
             person_doc = self.db_instance.personColl.find_one(
                 {"id": person_id}, {"_id": 0})
             face_recognizer.add_change_event(
@@ -68,13 +68,13 @@ class FaceManagement:
                 params=[person_doc]
             )
         else:
-            status_res = False
+            status_res = Validation.NOT_ACCEPTABLE
 
-        return status_res
+        return status_res, image_validation
 
     def select_all_face_of_person(self, person_id: str, skip: int, limit: int):
         if not self.verify.check_person_by_id(person_id):
-            raise HTTPException(status.HTTP_404_NOT_FOUND)
+            return Validation.PERSON_ID_NOT_FOUND
         person_doc = self.db_instance.personColl.find_one(
             {"id": person_id}, {"faces.vectors.value": 0})
         if "faces" not in person_doc.keys() or person_doc["faces"] is None:
@@ -92,15 +92,9 @@ class FaceManagement:
         faces = faces[skip: skip + limit]
         return faces
 
-    def update_face_data(self):
-        pass
-
-    def update_image_path(self):
-        pass
-
     def delete_face_by_id(self, person_id: str, face_id: str):
         if not self.verify.check_face_by_id(person_id, face_id):
-            raise HTTPException(status.HTTP_404_NOT_FOUND)
+            return Validation.PERSON_ID_HAS_NOT_FACE_ID
 
         person_doc = list(self.db_instance.personColl.find({
             "$and": [
@@ -131,7 +125,7 @@ class FaceManagement:
 
     def delete_all_face(self, person_id: str):
         if not self.verify.check_person_by_id(person_id):
-            raise HTTPException(status.HTTP_404_NOT_FOUND)
+            return Validation.PERSON_ID_NOT_FOUND
         self.db_instance.personColl.update_one(
             {"id": person_id},
             {"$pull": {"faces": {}}}
@@ -143,44 +137,4 @@ class FaceManagement:
         face_recognizer.add_change_event(
             event=ChangeEvent.remove_person,
             params=[person_id]
-        )
-
-    def recognize(self, image: np.ndarray):
-        if image is None:
-            raise HTTPException(status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
-
-        embed_vector = self.face_validation.encode(image)
-        if embed_vector.size == 0:
-            return JSONResponse(
-                status_code=status.HTTP_406_NOT_ACCEPTABLE,
-                content={"INFO": "This image has no face"}
-            )
-
-        state = ""
-        face_live = self.face_validation.check_face_liveness(image)
-        if face_live is not None:
-            if face_live:
-                state = "real"
-            else:
-                state = "fake"
-
-        person_info = face_recognizer.search(embed_vector)
-        if len(person_info.keys()) == 0:
-            return JSONResponse(
-                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                content={"INFO": "Recognition Model is not ready."}
-            )
-        elif len(person_info.keys()) == 1:
-            return JSONResponse(
-                status_code=status.HTTP_404_NOT_FOUND,
-                content={"INFO": "Unrecognize person in this image.",
-                         "state": state}
-            )
-        person_doc = PersonDoc(
-            id=person_info["person_id"], name=person_info["person_name"])
-        person_dict = person_doc.dict()
-        person_dict["state"] = state
-        return JSONResponse(
-            status_code=status.HTTP_200_OK,
-            content=person_dict
         )
