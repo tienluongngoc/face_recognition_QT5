@@ -14,7 +14,7 @@ from ..validation import FaceValidation
 from pathlib import Path
 import cv2
 from utils import npfloat2float
-from inferences import reg_infer, ChangeEvent, enc_infer
+from inferences import face_recognizer, ChangeEvent, face_encode
 
 class FaceCRUD:
 	def __init__(self, face_config, db_instance: PersonDatabase) -> None:

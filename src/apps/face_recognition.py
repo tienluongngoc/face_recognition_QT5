@@ -1,24 +1,22 @@
-from inferences  import SCRFD, ArcFace, FAISS
+from inferences import face_detection, face_recognizer, face_encode
 from inferences.utils.face_detect import Face
 from models.person import PersonDoc
-from database import PersonDatabase
-from configs import SCRFDConfig, ArcFaceConfig, FaissConfig, FaceRecogAPIConfig
 from .data_queue import DataQueue
 import numpy as np
 from typing import List
 from threading import Thread
 import cv2
 
+
 class FaceRecognition(Thread):
-    def __init__(self, recognizer) -> None:
+    def __init__(self) -> None:
         Thread.__init__(self)
         super(FaceRecognition, self).__init__()
         
         self.frame_queue = DataQueue.__call__().get_frame_queue()
-        global_config = FaceRecogAPIConfig(config_path="configs/face_recog_api.yaml")
-        self.face_detection = SCRFD(global_config.detection)
-        self.face_encode = ArcFace(global_config.encode)
-        self.recognizer = recognizer
+        self.face_detection = face_detection
+        self.face_encode = face_encode
+        self.recognizer = face_recognizer
 
 
     def encode(self, image: np.ndarray) -> np.ndarray:
@@ -49,8 +47,6 @@ class FaceRecognition(Thread):
     def run(self):
         while True:
             image =  self.frame_queue.get()["image"]
-            # image =  cv2.imread("photo_2022-07-04_09-39-31.jpg")
-            # cv2.imwrite("test.jpg", image)
             if image is None:
                 raise
             embed_vector = self.encode(image)

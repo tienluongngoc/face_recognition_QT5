@@ -2,38 +2,29 @@ from pathlib import Path
 import shutil
 from fastapi import status, HTTPException
 from src.database import PersonDatabase
-from ..validation import PersonVerify
+from ..services.validation import PersonVerify
 from schemas import SimplePerson
 from models import PersonDoc
 from inferences import face_recognizer, ChangeEvent
 import os
+from urllib.parse import unquote
 
-
-
-class PersonCRUD:
+class PersonManagement:
 	def __init__(self, face_config, db_instance: PersonDatabase) -> None:
 		self.face_config = face_config
 		self.db_instance = db_instance
 		self.verify = PersonVerify(db_instance=db_instance)
 	
-	def insert_person(self, person: SimplePerson) -> PersonDoc:
+	def insert_person(self, id: str, name: str) -> PersonDoc:
+		id,name = unquote(id), unquote(name)
+		person = SimplePerson(id=id, name=name)
 		if self.verify.check_person_by_id(person.id):
-			raise HTTPException(status.HTTP_409_CONFLICT)
+			raise 
 		
 		person_doc = PersonDoc(id=person.id, name=person.name)
 		self.db_instance.personColl.insert_one(person_doc.dict())
-
 		return person_doc
 	
-	def simple_insert_person(self, person_id: str, person_name: str) -> PersonDoc:
-		if self.verify.check_person_by_id(id):
-			raise HTTPException(status.HTTP_409_CONFLICT)
-		
-		person_doc = PersonDoc(id=person_id, name=person_name)
-		self.db_instance.personColl.insert_one(person_doc)
-
-		return person_doc
-
 	def select_all_people(self, skip: int, limit: int, have_vector: bool = False) -> list:
 		listPeople = []
 		if have_vector:
@@ -63,8 +54,9 @@ class PersonCRUD:
 		return doc
 
 	def update_person_name(self, person_id: str, name: str):
+		person_id, name = unquote(person_id), unquote(name)
 		if not self.verify.check_person_by_id(person_id):
-			raise HTTPException(status.HTTP_412_PRECONDITION_FAILED)
+			raise 
 		self.db_instance.personColl.update_one(
 			{"id": person_id},
 			{"$set": {"name": name}}
@@ -76,8 +68,9 @@ class PersonCRUD:
 		)
 
 	def update_person_id(self, person_id: str, new_id: str):
+		person_id, new_id = unquote(person_id), unquote(new_id)
 		if not self.verify.check_person_by_id(person_id):
-			raise HTTPException(status.HTTP_412_PRECONDITION_FAILED)
+			raise 
 		self.db_instance.personColl.update_one(
 			{"id": person_id},
 			{"$set": {"id": new_id}}
@@ -96,8 +89,7 @@ class PersonCRUD:
 
 	def delete_person_by_id(self, id: str):
 		if not self.verify.check_person_by_id(id):
-			raise HTTPException(status.HTTP_404_NOT_FOUND)
-
+			raise 
 		image_dir = os.path.join(self.face_config["path"], id)
 		if os.path.exists(image_dir):
 			shutil.rmtree(image_dir)

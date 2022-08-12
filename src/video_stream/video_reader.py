@@ -14,7 +14,7 @@ class VideoReader(Subject, Thread):
     def __init__(self, config, frame_queue: Queue):
         Thread.__init__(self)
         super(VideoReader, self).__init__()
-        self.camera_url = 0
+        self.camera_url = "images/small_talk.mp4"
         self.sleep_time = 0.5 #config[""]
         # self.camera_id = config["camera_id"]
         # self.location = config["location"]
@@ -23,7 +23,7 @@ class VideoReader(Subject, Thread):
         self.frame_queue = frame_queue
         self.frame = np.zeros((2, 2))
         self.is_stop = False
-        self.cap = cv2.VideoCapture(0)
+        self.cap = cv2.VideoCapture(self.camera_url)
         self.prev_frame_time = 0
         self.new_frame_time = 0
         self.frame_count = 0
@@ -37,8 +37,8 @@ class VideoReader(Subject, Thread):
                 grabbed, self.frame = self.cap.read()
                 if grabbed == True:
                     time.sleep(self.sleep_time)
-                    # img = cv2.imread("images/cr71.jpg")
-                    frame_data = {"image": self.frame,
+                    img = cv2.imread("images/cr71.jpg")
+                    frame_data = {"image": img,
                                 #   "location": self.location,
                                 #   "camera_id": self.camera_id, 
                                 #   "service_name": self.service_name

@@ -3,17 +3,17 @@ from schemas.validation import ImageValidation
 from models import PersonDoc
 import cv2
 import numpy as np
-from inferences import det_infer, enc_infer, reg_infer
+from inferences import face_detection, face_encode, face_recognizer
 from inferences.utils.face_detect import Face
 import os, glob
 
 class FaceValidation:
 	def __init__(self, face_config):
 		self.face_config = face_config
-		self.engine = enc_infer.config.engine_default
+		self.engine = face_encode.config.engine_default
 
 	def encode(self, image: np.ndarray) -> np.ndarray:
-		detection_results = det_infer.detect(image)
+		detection_results = face_detection.detect(image)
 		if detection_results[0].shape[0] == 0 or detection_results[1].shape[0] == 0:
 			return np.array([])
 		detection_results = self.get_largest_bbox(detection_results)
@@ -22,11 +22,11 @@ class FaceValidation:
 			kps=detection_results[1][0], 
 			det_score=detection_results[0][-1]
 		)
-		encode_results = enc_infer.get(image, face)
+		encode_results = face_encode.get(image, face)
 		return encode_results
 
 	def check_face_liveness(self, image):
-		detection_results = det_infer.detect(image)
+		detection_results = face_detection.detect(image)
 		if detection_results[0].shape[0] == 0 or detection_results[1].shape[0] == 0:
 			return None
 		detection_results = self.get_largest_bbox(detection_results)
@@ -71,7 +71,7 @@ class FaceValidation:
 			return check_result
 				
 		# check if image has no face
-		detection_results = det_infer.detect(image)
+		detection_results = face_detection.detect(image)
 		num_faces = len(detection_results[0])
 		if num_faces == 0:
 			return ImageValidation.IMAGE_HAS_NO_FACE
@@ -88,7 +88,7 @@ class FaceValidation:
 		elif len(person_doc["faces"]) == 0:
 			has_face = False
 		if not has_face:
-			person_info = reg_infer.search(face_encoded)
+			person_info = face_recognizer.search(face_encoded)
 			if len(person_info) != 0:
 				if person_info["person_id"] != "continue":
 					if person_info["person_id"] == "unrecognize":
@@ -114,7 +114,7 @@ class FaceValidation:
 				return ImageValidation.IMAGE_IS_VALID
 			else:
 				current_embedding_vectors = np.array(current_embedding_vectors, dtype=np.float32)
-				sim_values = [enc_infer.is_same(
+				sim_values = [face_encode.is_same(
 					np.array(x, dtype=np.float32), np.array(face_encoded, dtype=np.float32)
 					) for x in current_embedding_vectors]
 				if np.array(sim_values).all():

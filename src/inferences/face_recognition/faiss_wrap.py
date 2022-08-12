@@ -124,6 +124,10 @@ class FAISS(metaclass=Singleton):
 			return {"person_id": "unrecognize"}  
 		
 		# map results to people database
+		print("------------------------------------------------")
+		print(self.local_db.vectors.keys())
+		print(person_indexes)
+		print("------------------------------------------------")
 		person_infos = [
 			self.local_db.people[list(self.local_db.vectors.keys())[x]] for x in person_indexes
 		]
