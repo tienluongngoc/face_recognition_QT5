@@ -26,6 +26,7 @@ class YOLOV5(TRTModel):
         return pred
 
     def pre_process(self, orgimg):
+        img0 = copy.deepcopy(orgimg)
         img = letterbox(orgimg, [640, 640], stride=32, auto=False)[0]
         # img = cv2.resize(orgimg, (640,640))
         img = img.transpose((2, 0, 1))[::-1]  # HWC to CHW, BGR to RGB
@@ -37,22 +38,7 @@ class YOLOV5(TRTModel):
         im /= 255  # 0 - 255 to 0.0 - 1.0
         if len(im.shape) == 3:
             im = im[None]  # expand for batch dim
-        return im
-        # img0 = copy.deepcopy(orgimg)
-        # h0, w0 = orgimg.shape[:2]
-        # r = self.input_shape[0]/ max(h0, w0) 
-        # if r != 1:
-        #     interp = cv2.INTER_AREA if r < 1 else cv2.INTER_LINEAR
-        #     img0 = cv2.resize(img0, (int(w0 * r), int(h0 * r)), interpolation=interp)
-        # imgsz = check_img_size(self.input_shape[0], s=self.stride_max) 
-        # img = letterbox(img0, new_shape=imgsz,auto=False)[0]
-        # img = img[:, :, ::-1].transpose(2, 0, 1).copy()
-        # img = torch.from_numpy(img)
-        # img = img.float()
-        # img /= 255.0
-        # if img.ndimension() == 3:
-        #     img = img.unsqueeze(0)
-        # return img,orgimg
+        return im, img0
 
     def nms(self, prediction):
         nc = prediction.shape[2] - 15  # number of classes
@@ -71,17 +57,6 @@ class YOLOV5(TRTModel):
             # Apply constraints
             # x[((x[..., 2:4] < min_wh) | (x[..., 2:4] > max_wh)).any(1), 4] = 0  # width-height
             x = x[xc[xi]]  # confidence
-
-            # Cat apriori labels if autolabelling
-            # if labels and len(labels[xi]):
-            #     l = labels[xi]
-            #     v = torch.zeros((len(l), nc + 15), device=x.device)
-            #     v[:, :4] = l[:, 1:5]  # box
-            #     v[:, 4] = 1.0  # conf
-            #     v[range(len(l)), l[:, 0].long() + 15] = 1.0  # cls
-            #     x = torch.cat((x, v), 0)
-
-            # If none remain process next image
             if not x.shape[0]:
                 continue
 
@@ -131,8 +106,6 @@ class YOLOV5(TRTModel):
 
     def post_process(self, img,orgimg,pred):
         pred = self.nms(pred)
-        print(pred[0].shape)
-        no_vis_nums=0
         results = []
         for i, det in enumerate(pred):
             gn = torch.tensor(orgimg.shape, device='cuda:0')[[1, 0, 1, 0]]
