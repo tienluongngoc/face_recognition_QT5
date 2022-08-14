@@ -3,6 +3,7 @@
 Common modules
 """
 from collections import OrderedDict, namedtuple
+from pickle import NONE
 import numpy as np
 import torch
 import torch.nn as nn
@@ -10,16 +11,15 @@ import yaml
 # from utils.general import LOGGER, check_version
 
 
-class YOLOV5TRT(nn.Module):
-    def __init__(self, weights='yolov5s.pt', device=torch.device('cpu'), dnn=False, data=None, fp16=False):
+class TRTModel(nn.Module):
+    def __init__(self, config):
         super().__init__()
-        stride, names = 32, [f'class{i}' for i in range(1000)]  # assign defaults
-        pt = False
-        if data:  # assign class names (optional)
-            with open(data, errors='ignore') as f:
-                names = yaml.safe_load(f)['names']
+        weights = config["weights"]
+        device = config["device"]
+        fp16 = config["fp16"]
+        self.input_name = config["input_name"]
+        self.output_name = config["output_name"]
         
-        # LOGGER.info(f'Loading {weights} for TensorRT inference...')
         import tensorrt as trt 
         # check_version(trt.__version__, '7.0.0', hard=True)  # require tensorrt>=7.0.0
         Binding = namedtuple('Binding', ('name', 'dtype', 'shape', 'data', 'ptr'))
@@ -38,7 +38,7 @@ class YOLOV5TRT(nn.Module):
                 fp16 = True
         self.binding_addrs = OrderedDict((n, d.ptr) for n, d in bindings.items())
         self.context = model.create_execution_context()
-        self.batch_size = bindings['input'].shape[0]
+        self.batch_size = bindings[self.input_name].shape[0]
         
         self.__dict__.update(locals())  # assign all variables to self
 
@@ -48,11 +48,11 @@ class YOLOV5TRT(nn.Module):
             im = im.half()  # to FP16
 
         # print((im.shape, self.bindings['data'].shape))
-        assert im.shape == self.bindings['input'].shape, (im.shape, self.bindings['input'].shape)
+        assert im.shape == self.bindings[self.input_name].shape, (im.shape, self.bindings[self.input_name].shape)
         
-        self.binding_addrs['input'] = int(im.data_ptr())
+        self.binding_addrs[self.input_name] = int(im.data_ptr())
         self.context.execute_v2(list(self.binding_addrs.values()))
-        y = self.bindings['output'].data
+        y = self.bindings[self.output_name].data
         
         if isinstance(y, np.ndarray):
             y = torch.tensor(y, device=self.device)
