@@ -12,10 +12,11 @@ import time
 stride = 32
 pt = False
 device = "cuda"
-config = {"onnx": "/data/tienln/workspace/mpi/face_recognition_pc_old/models/yolov5s_face.onnx", 
-          "engine": "/data/tienln/workspace/mpi/face_recognition_pc_old/yolov5/yolov5s_face.engine",
+config = {"onnx": "weights/yolov5s_face.onnx", 
+          "engine": "weights/yolov5s_face_fp16.engine",
           "device": "cuda",
-          "fp16": False,
+          "half": True,
+          "max_workspace_size": 4,
           "input_name": "input",
           "output_name": "output"}
 model = YOLOV5(config)
@@ -23,7 +24,7 @@ model = YOLOV5(config)
 
 img0 = cv2.imread("/data/tienln/workspace/mpi/face_recognition_pc_old/images/result.jpg")  # BGR
 img, img0=  model.pre_process(img0)
-# print(img.shape)
+print(img.shape)
 for i in range(10):
     st = time.time()
     pred = model.inference(img)
