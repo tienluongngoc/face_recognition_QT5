@@ -2,7 +2,7 @@ from pathlib import Path
 import shutil
 from fastapi import status, HTTPException
 from src.database import PersonDatabase
-from services.validation import PersonVerify
+from validation import PersonVerify
 from schemas import SimplePerson
 from models import PersonDoc
 from inferences import ChangeEvent
@@ -18,13 +18,13 @@ class PersonManagement:
 		self.db_instance = db_instance
 		self.verify = PersonVerify(db_instance=db_instance)
 		config = FaceRecognitionConfigInstance.__call__().get_config()
-		self.face_recognizer = FaceRecognitionFactory(config)
+		self.face_recognizer = FaceRecognitionFactory.__call__(config).get_engine()
 	
 	def insert_person(self, id: str, name: str) -> PersonDoc:
 		id,name = unquote(id), unquote(name)
 		person = SimplePerson(id=id, name=name)
 		if self.verify.check_person_by_id(person.id):
-			Validation.PERSON_ID_ALREADY_EXIST 
+			return Validation.PERSON_ID_ALREADY_EXIST 
 		
 		person_doc = PersonDoc(id=person.id, name=person.name)
 		self.db_instance.personColl.insert_one(person_doc.dict())

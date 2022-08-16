@@ -16,6 +16,8 @@ class TRTModel(nn.Module):
         # self.input_name = config["input_name"]
         # self.output_name = config["output_name"]
         # self.max_workspace_size = config["max_workspace_size"]
+
+        
         self.engine = config.engine
         self.onnx = config.onnx
         self.device = config.device
@@ -24,7 +26,7 @@ class TRTModel(nn.Module):
         self.output_name = config.output_name
         self.max_workspace_size = config.max_workspace
         self.logger = Logger.__call__().get_logger()
-        self.export_engine()
+        # self.export_engine()
 
         self.logger.info(f'Loading {self.engine} for TensorRT inference...')
         Binding = namedtuple('Binding', ('name', 'dtype', 'shape', 'data', 'ptr'))

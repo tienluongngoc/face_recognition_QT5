@@ -10,7 +10,8 @@ import numpy as np
 from typing import List
 from threading import Thread
 import cv2
-from configs import all_config
+# from configs import all_config
+from configs import FaceRecognitionConfigInstance
 
 
 class FaceRecognition(Thread):
@@ -18,9 +19,10 @@ class FaceRecognition(Thread):
         Thread.__init__(self)
         super(FaceRecognition, self).__init__()
         self.frame_queue = DataQueue.__call__().get_frame_queue()
-        self.face_detection = FaceDetectionFactory(all_config).get_engine()
-        self.face_encode = FaceEncodeFactory(all_config).get_engine()
-        self.recognizer = FaceRecognitionFactory.__call__(all_config).get_engine()
+        face_recognition_config = FaceRecognitionConfigInstance.__call__().get_config()
+        self.face_detection = FaceDetectionFactory(face_recognition_config).get_engine()
+        self.face_encode = FaceEncodeFactory(face_recognition_config).get_engine()
+        self.recognizer = FaceRecognitionFactory.__call__(face_recognition_config).get_engine()
 
     def encode(self, image: np.ndarray) -> np.ndarray:
         detection_results = self.face_detection.detect(image)

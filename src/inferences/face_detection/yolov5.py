@@ -19,8 +19,6 @@ class YOLOV5(TRTModel):
         self.confidence_threshold = config.confidence_threshold
         self.iou_threshold = config.iou_threshold
 
-        
-    
     def inference(self, img):
         pred = self(img)
         return pred

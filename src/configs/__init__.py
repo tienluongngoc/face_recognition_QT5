@@ -8,7 +8,7 @@ from .config_instance import FaceRecognitionConfigInstance
 all_config_path = "configs/face_recognition.yaml"
 all_config = FaceRecogAPIConfig(config_path=all_config_path)
 
-mongodb_config = all_config.mongodb
-api_config = all_config.api
-model_server_config = all_config.model_server
-faces_config = all_config.faces
+# mongodb_config = all_config.mongodb
+# api_config = all_config.api
+# model_server_config = all_config.model_server
+# faces_config = all_config.faces

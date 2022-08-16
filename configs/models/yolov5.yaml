@@ -1,13 +1,12 @@
-onnx: weights/yolov5s-face.onnx
-engine: weights/yolov5s-face.engine
+onnx: weights/yolov5s_face.onnx
+engine: weights/yolov5s_face_fp16.engine
 device: "cuda"
 half: True
 input_name: "input"
 input_shape: [1,3,640,640]
-
 output_name: "output"
 output_shape: [1,25200,16] 
 max_workspace: 4 #GB
 stride_max: 32
-confidence_threshold: 
-iou_threshold: 
+confidence_threshold: 0.5
+iou_threshold: 0.5

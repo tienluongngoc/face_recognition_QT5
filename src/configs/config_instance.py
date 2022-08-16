@@ -1,5 +1,4 @@
 from .face_recognition_config import FaceRecogAPIConfig
-# from ..utils.utils import Singleton
 class Singleton(type):
     _instances = {}
     def __call__(cls, *args, **kwargs):
@@ -10,7 +9,7 @@ class Singleton(type):
 class FaceRecognitionConfigInstance(metaclass=Singleton):
     def __init__(self) -> None:
         super(FaceRecognitionConfigInstance, self).__init__()
-        self.config = FaceRecogAPIConfig("")
+        self.config = FaceRecogAPIConfig("configs/face_recognition.yaml")
     
     def get_config(self):
         return self.config

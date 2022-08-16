@@ -1,8 +1,7 @@
 from distutils.command.config import config
 from database import PersonDatabase
 from models.person import PersonDoc
-# from services.validation import face_validation
-from services.validation import PersonVerify
+from validation import PersonVerify
 import os
 import shutil
 import numpy as np
@@ -11,19 +10,26 @@ from schemas import ImageValidation,Validation
 from models import EmbeddingVectorDoc, FaceDoc
 from fastapi.responses import JSONResponse
 import uuid
-from services.validation import FaceValidation
+from validation import FaceValidation
 from pathlib import Path
 import cv2
 from utils.utils import npfloat2float
-from inferences import face_recognizer, ChangeEvent, face_encode
+from inferences import ChangeEvent, face_encode
 from urllib.parse import unquote
+from apps.face_recognition_factory import FaceRecognitionFactory
+from configs.config_instance import FaceRecognitionConfigInstance
+from .face_recognition import FaceRecognition
 
-class FaceManagement:
+class FaceManagement(FaceRecognition):
     def __init__(self, face_config, db_instance: PersonDatabase) -> None:
+        super(FaceManagement, self).__init__()
         self.face_config = face_config
         self.db_instance = db_instance
+        config = FaceRecognitionConfigInstance.__call__().get_config()
+        self.face_recognizer = FaceRecognitionFactory.__call__(config).get_engine()
+
         self.verify = PersonVerify(db_instance=db_instance)
-        self.face_validation = FaceValidation(face_config)
+        self.face_validation = FaceValidation(self.face_config,self.face_detection, self.face_encode, self.face_recognizer)
 
     def insert_face(self, person_id: str, face_id: str, image: np.ndarray):
         person_id, face_id = unquote(person_id), unquote(face_id)
@@ -63,7 +69,7 @@ class FaceManagement:
             status_res = Validation.CREATED_FACE
             person_doc = self.db_instance.personColl.find_one(
                 {"id": person_id}, {"_id": 0})
-            face_recognizer.add_change_event(
+            self.face_recognizer.add_change_event(
                 event=ChangeEvent.add_vector,
                 params=[person_doc]
             )
