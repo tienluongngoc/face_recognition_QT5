@@ -4,7 +4,7 @@ from fastapi import UploadFile, File
 from fastapi.responses import JSONResponse
 from models.person import PersonDoc
 from schemas.validation import ImageValidation
-from services import FaceCRUD_instance
+from x import FaceCRUD_instance
 import cv2
 import numpy as np
 from models import FaceDoc

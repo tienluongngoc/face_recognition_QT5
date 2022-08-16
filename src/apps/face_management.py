@@ -1,7 +1,7 @@
 from distutils.command.config import config
 from database import PersonDatabase
 from models.person import PersonDoc
-from services.validation import face_validation
+# from services.validation import face_validation
 from services.validation import PersonVerify
 import os
 import shutil
@@ -14,7 +14,7 @@ import uuid
 from services.validation import FaceValidation
 from pathlib import Path
 import cv2
-from utils import npfloat2float
+from utils.utils import npfloat2float
 from inferences import face_recognizer, ChangeEvent, face_encode
 from urllib.parse import unquote
 

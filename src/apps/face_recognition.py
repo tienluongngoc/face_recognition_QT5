@@ -1,4 +1,8 @@
-from inferences import face_detection, face_recognizer, face_encode
+from .face_recognition_factory import FaceRecognitionFactory
+from inferences import face_detection, face_encode
+from inferences import YOLOV5, SCRFD, ArcFace
+from .face_detection_factory import FaceDetectionFactory
+from .face_encode_factory import FaceEncodeFactory
 from inferences.utils.face_detect import Face
 from models.person import PersonDoc
 from .data_queue import DataQueue
@@ -6,18 +10,17 @@ import numpy as np
 from typing import List
 from threading import Thread
 import cv2
+from configs import all_config
 
 
 class FaceRecognition(Thread):
     def __init__(self) -> None:
         Thread.__init__(self)
         super(FaceRecognition, self).__init__()
-        
         self.frame_queue = DataQueue.__call__().get_frame_queue()
-        self.face_detection = face_detection
-        self.face_encode = face_encode
-        self.recognizer = face_recognizer
-
+        self.face_detection = FaceDetectionFactory(all_config).get_engine()
+        self.face_encode = FaceEncodeFactory(all_config).get_engine()
+        self.recognizer = FaceRecognitionFactory.__call__(all_config).get_engine()
 
     def encode(self, image: np.ndarray) -> np.ndarray:
         detection_results = self.face_detection.detect(image)

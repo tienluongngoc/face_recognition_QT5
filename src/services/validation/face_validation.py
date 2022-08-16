@@ -1,16 +1,20 @@
+from distutils.command.config import config
 from typing import List
 from schemas.validation import ImageValidation
 from models import PersonDoc
 import cv2
 import numpy as np
-from inferences import face_detection, face_encode, face_recognizer
+from inferences import face_detection, face_encode
 from inferences.utils.face_detect import Face
 import os, glob
-
+from apps.face_recognition_factory import FaceRecognitionFactory
+from configs.config_instance import FaceRecognitionConfigInstance
 class FaceValidation:
 	def __init__(self, face_config):
 		self.face_config = face_config
 		self.engine = face_encode.config.engine_default
+		config = FaceRecognitionConfigInstance.__call__().get_config()
+		self.face_recognizer = FaceRecognitionFactory(config)
 
 	def encode(self, image: np.ndarray) -> np.ndarray:
 		detection_results = face_detection.detect(image)
@@ -88,7 +92,7 @@ class FaceValidation:
 		elif len(person_doc["faces"]) == 0:
 			has_face = False
 		if not has_face:
-			person_info = face_recognizer.search(face_encoded)
+			person_info = self.face_recognizer.search(face_encoded)
 			if len(person_info) != 0:
 				if person_info["person_id"] != "continue":
 					if person_info["person_id"] == "unrecognize":

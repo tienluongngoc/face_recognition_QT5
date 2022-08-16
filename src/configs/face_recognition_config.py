@@ -3,6 +3,7 @@ from .scrfd_config import SCRFDConfig
 from .arcface_config import ArcFaceConfig
 from .faiss_config import FaissConfig
 from .fasnet_config import FASNetConfig
+from .yolov5_config import Yolov5Config
 
 class Singleton(type):
     _instances = {}
@@ -14,14 +15,34 @@ class Singleton(type):
 class FaceRecogAPIConfig(BaseConfig, metaclass=Singleton):
 	def __init__(self, config_path) -> None:
 		super(FaceRecogAPIConfig, self).__init__(config_path)
+		
+	@property
+	def detection_engine(self):
+		engine_name = self.config["models"]["detection"]["engine"]
+		return engine_name
 	
 	@property
 	def detection(self):
-		return SCRFDConfig(self.config["models"]["detection_path"])
+		if self.config["models"]["detection"]["engine"] == "scrfd":
+			result = SCRFDConfig(self.config["models"]["detection"]["engine_config"]["scrfd"])
+		elif self.config["models"]["detection"]["engine"] == "yolov5":
+			result = Yolov5Config(self.config["models"]["detection"]["engine_config"]["yolov5"])
+		else:
+			pass
+		return result
 	
 	@property
 	def encode(self):
-		return ArcFaceConfig(self.config["models"]["encode_path"])
+		if self.config["models"]["encode"]["engine"] == "arcface":
+			result = ArcFaceConfig(self.config["models"]["encode"]["engine_config"]["arcface"])
+		else:
+			pass
+		return result
+
+	@property
+	def encode_engine(self):
+		engine_name = self.config["models"]["encode"]["engine"]
+		return engine_name
 
 	@property
 	def anti_spoofing_v1se(self):
@@ -33,7 +54,16 @@ class FaceRecogAPIConfig(BaseConfig, metaclass=Singleton):
 
 	@property
 	def recognition(self):
-		return FaissConfig(self.config["models"]["recognition_path"])
+		if self.config["models"]["recognition"]["engine"] == "faiss":
+			result = FaissConfig(self.config["models"]["recognition"]["engine_config"]["faiss"])
+		else:
+			pass
+		return result
+
+	@property
+	def recognition_engine(self):
+		engine_name = self.config["models"]["recognition"]["engine"]
+		return engine_name
 	
 	@property
 	def api(self):

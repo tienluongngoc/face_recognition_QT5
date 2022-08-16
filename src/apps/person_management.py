@@ -2,19 +2,23 @@ from pathlib import Path
 import shutil
 from fastapi import status, HTTPException
 from src.database import PersonDatabase
-from ..services.validation import PersonVerify
+from services.validation import PersonVerify
 from schemas import SimplePerson
 from models import PersonDoc
-from inferences import face_recognizer, ChangeEvent
+from inferences import ChangeEvent
 import os
 from urllib.parse import unquote
 from schemas import Validation
+from apps.face_recognition_factory import FaceRecognitionFactory
+from configs.config_instance import FaceRecognitionConfigInstance
 
 class PersonManagement:
 	def __init__(self, face_config, db_instance: PersonDatabase) -> None:
 		self.face_config = face_config
 		self.db_instance = db_instance
 		self.verify = PersonVerify(db_instance=db_instance)
+		config = FaceRecognitionConfigInstance.__call__().get_config()
+		self.face_recognizer = FaceRecognitionFactory(config)
 	
 	def insert_person(self, id: str, name: str) -> PersonDoc:
 		id,name = unquote(id), unquote(name)
@@ -63,7 +67,7 @@ class PersonManagement:
 			{"$set": {"name": name}}
 		)
 
-		face_recognizer.add_change_event(
+		self.face_recognizer.add_change_event(
 			event=ChangeEvent.update_name,
 			params=[person_id, name]
 		)
@@ -83,7 +87,7 @@ class PersonManagement:
 				self.face_config["path"], new_id)
 			os.rename(current_images_path, new_images_path)
 		
-		face_recognizer.add_change_event(
+		self.face_recognizer.add_change_event(
 			event=ChangeEvent.update_id,
 			params=[person_id, new_id]
 		)
@@ -97,7 +101,7 @@ class PersonManagement:
 
 		self.db_instance.personColl.delete_one({"id": id})
 
-		face_recognizer.add_change_event(
+		self.face_recognizer.add_change_event(
 			event=ChangeEvent.remove_person,
 			params=[id]
 		)
@@ -109,7 +113,7 @@ class PersonManagement:
 			Path(self.face_config["path"]).mkdir(
 				parents=True, exist_ok=True)
 		
-		face_recognizer.add_change_event(
+		self.face_recognizer.add_change_event(
 			event=ChangeEvent.remove_all_db,
 			params=[]
 		)

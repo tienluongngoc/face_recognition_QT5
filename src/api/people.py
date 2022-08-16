@@ -2,7 +2,7 @@ from fastapi import APIRouter, Response, status
 from models.person import PersonDoc
 from schemas import SimplePerson
 from typing import List
-from services import PersonCRUD_instance
+from x import PersonCRUD_instance
 from urllib.parse import unquote
 
 router = APIRouter(prefix='/people', tags=['people'])

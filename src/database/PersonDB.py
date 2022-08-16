@@ -88,3 +88,4 @@ class PersonDatabase(BaseDatabase):
 	def remove_all_db(self):
 		self.people = {}
 		self.vectors = {}
+
