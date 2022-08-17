@@ -23,6 +23,7 @@ class FaceRecognition(Thread):
         self.face_detection = FaceDetectionFactory(face_recognition_config).get_engine()
         self.face_encode = FaceEncodeFactory(face_recognition_config).get_engine()
         self.recognizer = FaceRecognitionFactory.__call__(face_recognition_config).get_engine()
+        self.recognizer.initialize()
 
     def encode(self, image: np.ndarray) -> np.ndarray:
         detection_results = self.face_detection.detect(image)
@@ -51,7 +52,8 @@ class FaceRecognition(Thread):
     
     def run(self):
         while True:
-            image =  self.frame_queue.get()["image"]
+            # image =  self.frame_queue.get()["image"]
+            image = cv2.imread("images/cr7.jpg")
             if image is None:
                 raise
             embed_vector = self.encode(image)

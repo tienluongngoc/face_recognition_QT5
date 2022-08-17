@@ -113,7 +113,7 @@ class FaceManagement(FaceRecognition):
                 vector_ids = [v["id"]
                               for v in person_doc[0]["faces"][0]["vectors"]]
                 for vector_id in vector_ids:
-                    face_recognizer.add_change_event(
+                    self.face_recognizer.add_change_event(
                         event=ChangeEvent.remove_vector,
                         params=[vector_id]
                     )
@@ -140,7 +140,7 @@ class FaceManagement(FaceRecognition):
         if os.path.exists(image_dir):
             shutil.rmtree(image_dir)
 
-        face_recognizer.add_change_event(
+        self.face_recognizer.add_change_event(
             event=ChangeEvent.remove_person,
             params=[person_id]
         )

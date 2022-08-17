@@ -43,7 +43,6 @@ class FAISS(metaclass=Singleton):
 		if self.config.device == "gpu":
 			res = faiss.StandardGpuResources()
 			self.index = faiss.index_cpu_to_gpu(res, 0, self.index)
-		
 		self.change_db_worker.start()
 		self.reload_model_worker.start()
 		self.change_all_db_worker.start()
@@ -124,10 +123,10 @@ class FAISS(metaclass=Singleton):
 			return {"person_id": "unrecognize"}  
 		
 		# map results to people database
-		print("------------------------------------------------")
-		print(self.local_db.vectors.keys())
-		print(person_indexes)
-		print("------------------------------------------------")
+		# print("------------------------------------------------")
+		# print(self.local_db.vectors.keys())
+		# print(person_indexes)
+		# print("------------------------------------------------")
 		person_infos = [
 			self.local_db.people[list(self.local_db.vectors.keys())[x]] for x in person_indexes
 		]
