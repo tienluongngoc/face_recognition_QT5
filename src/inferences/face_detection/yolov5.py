@@ -10,18 +10,18 @@ import time
 class YOLOV5(TRTModel):
     def __init__(self, config: Yolov5Config):
         super().__init__(config)
-        # self.onnx = config["face_detection"]["onnx"]
-        # self.engine = config["face_detection"]["engine"]
-        # self.fp16_mode = config["face_detection"]["fp16_mode"]
         self.output_shape = config.output_shape
         self.input_shape = config.input_shape
         self.stride_max = config.stride_max
         self.confidence_threshold = config.confidence_threshold
         self.iou_threshold = config.iou_threshold
 
-    def inference(self, img):
-        pred = self(img)
-        return pred
+    def detect(self, img):
+        im, img0 = self.pre_process(img)
+        pred = self(im)
+        results = self.post_process(im, img0, pred)
+
+        return results
 
     def pre_process(self, orgimg):
         img0 = copy.deepcopy(orgimg)
@@ -103,7 +103,8 @@ class YOLOV5(TRTModel):
 
     def post_process(self, img,orgimg,pred):
         pred = self.nms(pred)
-        results = []
+        point = []
+        kpss = []
         for i, det in enumerate(pred):
             gn = torch.tensor(orgimg.shape, device='cuda:0')[[1, 0, 1, 0]]
             gn_lks = torch.tensor(orgimg.shape, device='cuda:0')[[1, 0, 1, 0, 1, 0, 1, 0, 1, 0]]
@@ -118,5 +119,8 @@ class YOLOV5(TRTModel):
                     conf = det[j, 4].cpu().numpy()
                     landmarks = (det[j, 5:15].view(1, 10) / gn_lks).view(-1).tolist()
                     result = get_bbox(orgimg, xywh, conf, landmarks)
-                    results.append(result)
-        return results
+                    point.append(result[0])
+                    kpss.append(result[1])
+                    # print(result)
+                    # results.append(result)
+        return np.array(point), np.array(kpss)

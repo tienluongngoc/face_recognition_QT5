@@ -1,3 +1,4 @@
+from os import pread
 from .face_recognition_factory import FaceRecognitionFactory
 from inferences import face_detection, face_encode
 from inferences import YOLOV5, SCRFD, ArcFace
@@ -53,7 +54,7 @@ class FaceRecognition(Thread):
     def run(self):
         while True:
             # image =  self.frame_queue.get()["image"]
-            image = cv2.imread("images/cr7.jpg")
+            image = cv2.imread("cr7.jpg")
             if image is None:
                 raise
             embed_vector = self.encode(image)

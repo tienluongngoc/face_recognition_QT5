@@ -1,3 +1,4 @@
+from .arcface_trt_config import ArcFaceTRTConfig
 from .base_config import BaseConfig
 from .scrfd_config import SCRFDConfig
 from .arcface_config import ArcFaceConfig
@@ -35,6 +36,8 @@ class FaceRecogAPIConfig(BaseConfig, metaclass=Singleton):
 	def encode(self):
 		if self.config["models"]["encode"]["engine"] == "arcface":
 			result = ArcFaceConfig(self.config["models"]["encode"]["engine_config"]["arcface"])
+		elif self.config["models"]["encode"]["engine"] == "arcface_trt":
+			result = ArcFaceTRTConfig(self.config["models"]["encode"]["engine_config"]["arcface_trt"])
 		else:
 			pass
 		return result

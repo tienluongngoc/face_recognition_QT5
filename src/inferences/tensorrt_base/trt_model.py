@@ -9,15 +9,7 @@ from utils.logger import Logger
 class TRTModel(nn.Module):
     def __init__(self, config):
         super().__init__()
-        # self.engine = config["engine"]
-        # self.onnx = config["onnx"]
-        # self.device = config["device"]
-        # self.half = config["half"]
-        # self.input_name = config["input_name"]
-        # self.output_name = config["output_name"]
-        # self.max_workspace_size = config["max_workspace_size"]
-
-        
+        print(config.half)
         self.engine = config.engine
         self.onnx = config.onnx
         self.device = config.device

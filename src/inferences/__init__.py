@@ -5,3 +5,4 @@ from .face_anti_spoofing.fasnet_emsemble import MiniFASNetEmsemble
 from .base import Singleton
 from .tensorrt_base.trt_model import TRTModel
 from .face_detection.yolov5 import YOLOV5
+from .face_encode.arcface_trt import ArceFaceTRT

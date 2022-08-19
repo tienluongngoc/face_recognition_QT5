@@ -1,4 +1,4 @@
-from inferences import ArcFace
+from inferences import ArcFace, ArceFaceTRT
 from configs.face_recognition_config import FaceRecogAPIConfig
 
 
@@ -10,4 +10,6 @@ class FaceEncodeFactory:
     def get_engine(self):
         if self.engine_name == "arcface":
             engine = ArcFace(self.encode_config)
+        elif self.engine_name == "arcface_trt":
+            engine = ArceFaceTRT(self.encode_config)
         return engine
