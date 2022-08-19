@@ -117,6 +117,7 @@ class FAISS(metaclass=Singleton):
 		person_indexes = []
 		# select embedding vectors with cosin > threshold
 		for i, dis in enumerate(D[0]):
+			print(dis)
 			if dis > self.config.threshold:
 				person_indexes.append(I[0][i])
 		if len(person_indexes) == 0:

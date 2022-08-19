@@ -1,7 +1,7 @@
 from os import pread
 from .face_recognition_factory import FaceRecognitionFactory
 from inferences import face_detection, face_encode
-from inferences import YOLOV5, SCRFD, ArcFace
+# from inferences import YOLOV5, SCRFD, ArcFace
 from .face_detection_factory import FaceDetectionFactory
 from .face_encode_factory import FaceEncodeFactory
 from inferences.utils.face_detect import Face

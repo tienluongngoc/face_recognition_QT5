@@ -57,7 +57,6 @@ class ArcFace(metaclass=Singleton):
 			net_out = [results.as_numpy(name) for name in self.config.output_names][0]
 		else:
 			net_out = self.session.run(self.config.output_names, {self.config.input_names[0]: blob})[0]
-		print(type(net_out))
 		return net_out
 	
 	def compute_sim(self, feat1, feat2):

@@ -1,6 +1,6 @@
 from distutils.command.config import config
 from turtle import ontimer
-from inferences import SCRFD, YOLOV5
+from inferences import SCRFD
 from configs.yolov5_config import Yolov5Config
 from configs.scrfd_config import SCRFDConfig
 from configs.face_recognition_config import FaceRecogAPIConfig
@@ -15,6 +15,7 @@ class FaceDetectionFactory:
         if self.engine_name == "scrfd":
             engine = SCRFD(self.detection_config)
         elif self.engine_name == "yolov5":
+            from inferences.face_detection.yolov5 import YOLOV5
             engine = YOLOV5(self.detection_config)
         
         return engine

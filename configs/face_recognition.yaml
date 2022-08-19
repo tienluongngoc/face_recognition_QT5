@@ -27,19 +27,20 @@ model_server:
 
 models:
   detection:
-    engine: yolov5
+    engine: scrfd
     engine_config:
       dummy: null
       scrfd: configs/models/scrfd.yaml
       yolov5: configs/models/yolov5.yaml
   encode:
-    engine: arcface_trt
+    engine: arcface
     engine_config:
       dummy: null
       arcface: configs/models/arcface.yaml
       arcface_trt: configs/models/arcface_trt.yaml
   recognition:
-    engine: faiss
+    engine: faiss_cpu
     engine_config:
       dumpy: null
-      faiss: configs/models/faiss.yaml
+      faiss_cpu: configs/models/faiss.yaml
+      faiss_gpu: configs/models/faiss.yaml
