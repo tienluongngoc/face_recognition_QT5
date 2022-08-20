@@ -1,12 +1,12 @@
 api:
-  server_host: "10.0.30.17"
+  server_host: "192.168.1.147"
   server_port: 9950
   log_level: "info"
   log_config: "configs/log_config.ini"
 
 mongodb:
-  hostname: "10.0.30.17"
-  port: 27018
+  hostname: "192.168.1.147"
+  port: 27017
   user: tienln 
   password: tienln
   maxSevSelDelay: 5 
@@ -21,7 +21,7 @@ faces:
   end: ".png"
 
 model_server:
-  host: "10.0.30.17"
+  host: "192.168.1.147"
   port: 7501
   running: false
 

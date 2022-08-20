@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1386</width>
-    <height>860</height>
+    <width>1343</width>
+    <height>769</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -23,8 +23,8 @@
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>10</y>
+      <x>10</x>
+      <y>0</y>
       <width>1311</width>
       <height>721</height>
      </rect>
@@ -41,8 +41,8 @@
           <rect>
            <x>20</x>
            <y>10</y>
-           <width>931</width>
-           <height>541</height>
+           <width>641</width>
+           <height>361</height>
           </rect>
          </property>
          <property name="text">
@@ -52,14 +52,14 @@
         <widget class="QPushButton" name="pushButton">
          <property name="geometry">
           <rect>
-           <x>70</x>
-           <y>630</y>
-           <width>461</width>
-           <height>31</height>
+           <x>240</x>
+           <y>430</y>
+           <width>111</width>
+           <height>81</height>
           </rect>
          </property>
          <property name="text">
-          <string>button</string>
+          <string>Start</string>
          </property>
         </widget>
        </widget>
@@ -78,7 +78,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1386</width>
+     <width>1343</width>
      <height>22</height>
     </rect>
    </property>

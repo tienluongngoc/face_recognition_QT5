@@ -6,7 +6,7 @@ from .face_detection_factory import FaceDetectionFactory
 from .face_encode_factory import FaceEncodeFactory
 from inferences.utils.face_detect import Face
 from models.person import PersonDoc
-from .data_queue import DataQueue
+from .data_queue import DataQueue, ResultQueue
 import numpy as np
 from typing import List
 from threading import Thread
@@ -20,11 +20,22 @@ class FaceRecognition(Thread):
         Thread.__init__(self)
         super(FaceRecognition, self).__init__()
         self.frame_queue = DataQueue.__call__().get_frame_queue()
+        self.result_queue = ResultQueue.__call__().get_result_queue()
         face_recognition_config = FaceRecognitionConfigInstance.__call__().get_config()
         self.face_detection = FaceDetectionFactory(face_recognition_config).get_engine()
         self.face_encode = FaceEncodeFactory(face_recognition_config).get_engine()
         self.recognizer = FaceRecognitionFactory.__call__(face_recognition_config).get_engine()
         self.recognizer.initialize()
+        self.recognize = False
+    
+    def enable(self):
+        self.recognize = True
+
+    def disable(self):
+        self.recognize = False
+    
+    def is_enable(self):
+        return self.recognize
 
     def encode(self, image: np.ndarray) -> np.ndarray:
         detection_results = self.face_detection.detect(image)
@@ -53,29 +64,33 @@ class FaceRecognition(Thread):
     
     def run(self):
         while True:
-            # image =  self.frame_queue.get()["image"]
-            image = cv2.imread("cr7.jpg")
-            if image is None:
-                raise
-            embed_vector = self.encode(image)
-            if embed_vector.size == 0:
-                return "Nothing"
+            image =  self.frame_queue.get()["image"]
+            if self.recognize:
+                print("Doing...")
+                if image is None:
+                    raise
+                embed_vector = self.encode(image)
+                if embed_vector.size == 0:
+                    return "Nothing"
 
-            state = ""
-            face_live = self.check_face_liveness(image)
-            if face_live is not None:
-                if face_live:
-                    state = "real"
-                else:
-                    state = "fake"
+                state = ""
+                face_live = self.check_face_liveness(image)
+                if face_live is not None:
+                    if face_live:
+                        state = "real"
+                    else:
+                        state = "fake"
 
-            person_info = self.recognizer.search(embed_vector)
+                person_info = self.recognizer.search(embed_vector)
 
-            # #TODO check
-            try:
-                person_doc = PersonDoc(id=person_info["person_id"], name=person_info["person_name"])
-                person_dict = person_doc.dict()
-                person_dict["state"] = state
-                print(person_dict)
-            except:
-                continue
+                # #TODO check
+                try:
+                    person_doc = PersonDoc(id=person_info["person_id"], name=person_info["person_name"])
+                    person_dict = person_doc.dict()
+                    person_dict["state"] = state
+                    print(person_dict)
+                except:
+                    continue
+            else:
+                result = {"image": image}
+                self.result_queue.put(result)
