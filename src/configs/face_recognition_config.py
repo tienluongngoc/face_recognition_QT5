@@ -57,8 +57,8 @@ class FaceRecogAPIConfig(BaseConfig, metaclass=Singleton):
 
 	@property
 	def recognition(self):
-		if self.config["models"]["recognition"]["engine"] == "faiss":
-			result = FaissConfig(self.config["models"]["recognition"]["engine_config"]["faiss"])
+		if self.config["models"]["recognition"]["engine"] == "faiss_cpu":
+			result = FaissConfig(self.config["models"]["recognition"]["engine_config"]["faiss_cpu"])
 		else:
 			pass
 		return result

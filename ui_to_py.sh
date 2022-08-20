@@ -1,0 +1,1 @@
+pyuic5 src/face_ui/face_ui.ui -o src/face_ui/face_ui.py

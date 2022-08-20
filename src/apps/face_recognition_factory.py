@@ -12,7 +12,7 @@ class FaceRecognitionFactory(metaclass=Singleton):
         self.database_instance = DatabaseInstance.__call__().get_database()
 
     def get_engine(self):
-        if self.engine_name == "faiss":
+        if self.engine_name == "faiss_cpu":
             engine = FAISS(self.recognition_config, self.database_instance)
             # engine.initialize()
         return engine

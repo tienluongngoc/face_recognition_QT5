@@ -14,7 +14,7 @@ class VideoReader(Subject, Thread):
     def __init__(self, config, frame_queue: Queue):
         Thread.__init__(self)
         super(VideoReader, self).__init__()
-        self.camera_url = "images/small_talk.mp4"
+        self.camera_url = "rtsp://admin:ATDJTN@192.168.1.99:554/H.264"
         self.sleep_time = 0.5 #config[""]
         # self.camera_id = config["camera_id"]
         # self.location = config["location"]
@@ -36,15 +36,16 @@ class VideoReader(Subject, Thread):
             try:
                 grabbed, self.frame = self.cap.read()
                 if grabbed == True:
-                    time.sleep(self.sleep_time)
-                    img = cv2.imread("images/cr71.jpg")
-                    frame_data = {"image": img,
+                    # time.sleep(self.sleep_time)
+                    # img = cv2.imread("images/cr71.jpg")
+                    frame_data = {"image": self.frame,
                                 #   "location": self.location,
                                 #   "camera_id": self.camera_id, 
                                 #   "service_name": self.service_name
                                   }
                     self.frame_queue.put(frame_data)
                     self.notify()
+                    print("queue size: ", self.frame_queue.qsize())
                 if self.frame_queue.qsize() >= 90:
                     self.frame_queue.get()
                 self.new_frame_time = time.time()
