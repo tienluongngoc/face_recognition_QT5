@@ -15,6 +15,18 @@ class PersonDatabase(BaseDatabase):
 		else:
 			self.save_db_local = False
 	
+	def get_person_coll(self):
+		return self.personColl
+	
+	def get_all_people(self):
+		people = self.personColl.find()
+		return people
+	
+	def number_of_people(self):
+		count = self.personColl.count_documents({})
+		return count
+
+
 	def initialize_local_db(self):
 		person_db = self.personColl.find(
 			{}, {"_id": 0, "faces.id": 0, "faces.imgPath": 0, "faces.vectors.engine": 0}

@@ -6,13 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1343</width>
-    <height>769</height>
+    <width>1385</width>
+    <height>642</height>
    </rect>
   </property>
   <property name="maximumSize">
    <size>
-    <width>1980</width>
+    <width>1920</width>
     <height>1080</height>
    </size>
   </property>
@@ -24,14 +24,17 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>0</y>
-      <width>1311</width>
-      <height>721</height>
+      <y>10</y>
+      <width>1361</width>
+      <height>601</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
       <widget class="QTabWidget" name="tabWidget">
+       <property name="currentIndex">
+        <number>1</number>
+       </property>
        <widget class="QWidget" name="tab">
         <attribute name="title">
          <string>Tab 1</string>
@@ -39,27 +42,279 @@
         <widget class="QLabel" name="label">
          <property name="geometry">
           <rect>
-           <x>20</x>
-           <y>10</y>
-           <width>641</width>
-           <height>361</height>
+           <x>10</x>
+           <y>0</y>
+           <width>1000</width>
+           <height>560</height>
           </rect>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>1280</width>
+           <height>720</height>
+          </size>
+         </property>
+         <property name="lineWidth">
+          <number>1</number>
          </property>
          <property name="text">
           <string>TextLabel</string>
          </property>
+         <property name="margin">
+          <number>-1</number>
+         </property>
+        </widget>
+        <widget class="QWidget" name="verticalLayoutWidget_3">
+         <property name="geometry">
+          <rect>
+           <x>1030</x>
+           <y>10</y>
+           <width>321</width>
+           <height>491</height>
+          </rect>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_14">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_15">
+            <item>
+             <widget class="QLabel" name="face_1">
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>TextLabel</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_15">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="name_1">
+                <property name="text">
+                 <string>Name: Tien Luong Ngoc</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="id_1">
+                <property name="text">
+                 <string>ID: tienln</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="time_1">
+                <property name="text">
+                 <string>Time: 07:30:45</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_16">
+            <item>
+             <widget class="QLabel" name="face_2">
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>TextLabel</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_18">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="name_2">
+                <property name="text">
+                 <string>Name: Tien Luong Ngoc</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="id_2">
+                <property name="text">
+                 <string>ID: tienln</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="time_2">
+                <property name="text">
+                 <string>Time: 07:30:45</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_17">
+            <item>
+             <widget class="QLabel" name="face_3">
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>TextLabel</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_20">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="name_3">
+                <property name="text">
+                 <string>Name: Tien Luong Ngoc</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="id_3">
+                <property name="text">
+                 <string>ID: tienln</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="time_3">
+                <property name="text">
+                 <string>Time: 07:30:45</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_18">
+            <property name="spacing">
+             <number>6</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="face_4">
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>TextLabel</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_21">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="name_4">
+                <property name="text">
+                 <string>Name: Tien Luong Ngoc</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="id_4">
+                <property name="text">
+                 <string>ID: tienln</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="time_4">
+                <property name="text">
+                 <string>Time: 07:30:45</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_19">
+            <item>
+             <widget class="QLabel" name="face_5">
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>100</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>TextLabel</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_22">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="name_5">
+                <property name="text">
+                 <string>Name: Tien Luong Ngoc</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="id_5">
+                <property name="text">
+                 <string>ID: tienln</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="time_5">
+                <property name="text">
+                 <string>Time: 07:30:45</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+         </layout>
         </widget>
         <widget class="QPushButton" name="pushButton">
          <property name="geometry">
           <rect>
-           <x>240</x>
-           <y>430</y>
-           <width>111</width>
-           <height>81</height>
+           <x>1030</x>
+           <y>520</y>
+           <width>321</width>
+           <height>41</height>
           </rect>
          </property>
          <property name="text">
-          <string>Start</string>
+          <string>PushButton</string>
          </property>
         </widget>
        </widget>
@@ -67,6 +322,267 @@
         <attribute name="title">
          <string>Tab 2</string>
         </attribute>
+        <widget class="QTableWidget" name="table_people">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>30</y>
+           <width>441</width>
+           <height>521</height>
+          </rect>
+         </property>
+         <column>
+          <property name="text">
+           <string>Name</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>ID</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Role</string>
+          </property>
+         </column>
+        </widget>
+        <widget class="QTableWidget" name="table_face">
+         <property name="geometry">
+          <rect>
+           <x>460</x>
+           <y>330</y>
+           <width>341</width>
+           <height>221</height>
+          </rect>
+         </property>
+         <column>
+          <property name="text">
+           <string>Face ID</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Path image</string>
+          </property>
+         </column>
+        </widget>
+        <widget class="QLabel" name="face_preview">
+         <property name="geometry">
+          <rect>
+           <x>820</x>
+           <y>210</y>
+           <width>491</width>
+           <height>331</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+        <widget class="QWidget" name="verticalLayoutWidget_2">
+         <property name="geometry">
+          <rect>
+           <x>820</x>
+           <y>20</y>
+           <width>351</width>
+           <height>171</height>
+          </rect>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <item>
+             <widget class="QLabel" name="label_2">
+              <property name="minimumSize">
+               <size>
+                <width>50</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Name</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="lineEdit">
+              <property name="maxLength">
+               <number>525</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_21">
+            <item>
+             <widget class="QLabel" name="label_8">
+              <property name="minimumSize">
+               <size>
+                <width>50</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>ID</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="lineEdit_2"/>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_22">
+            <item>
+             <widget class="QLabel" name="label_14">
+              <property name="minimumSize">
+               <size>
+                <width>50</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Role</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="lineEdit_3"/>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_23">
+            <item>
+             <widget class="QLabel" name="label_15">
+              <property name="minimumSize">
+               <size>
+                <width>50</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>X</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="lineEdit_4"/>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_25">
+            <item>
+             <widget class="QLabel" name="label_36">
+              <property name="minimumSize">
+               <size>
+                <width>50</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Y</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="lineEdit_5"/>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="verticalLayoutWidget_9">
+         <property name="geometry">
+          <rect>
+           <x>1200</x>
+           <y>10</y>
+           <width>111</width>
+           <height>180</height>
+          </rect>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_23">
+          <item>
+           <widget class="QPushButton" name="pushButton_2">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Add</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_3">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Update</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_4">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Delete</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_5">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Add face</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QTableWidget" name="tableWidget">
+         <property name="geometry">
+          <rect>
+           <x>460</x>
+           <y>30</y>
+           <width>341</width>
+           <height>281</height>
+          </rect>
+         </property>
+         <column>
+          <property name="text">
+           <string>Data</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Time</string>
+          </property>
+         </column>
+        </widget>
        </widget>
       </widget>
      </item>
@@ -78,7 +594,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1343</width>
+     <width>1385</width>
      <height>22</height>
     </rect>
    </property>

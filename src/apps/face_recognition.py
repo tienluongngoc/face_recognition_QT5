@@ -40,15 +40,15 @@ class FaceRecognition(Thread):
     def encode(self, image: np.ndarray) -> np.ndarray:
         detection_results = self.face_detection.detect(image)
         if detection_results[0].shape[0] == 0 or detection_results[1].shape[0] == 0:
-            return np.array([])
-        detection_results = self.get_largest_bbox(detection_results)
+            return np.array([]), np.array([]), np.array([])
+        argest_bbox = self.get_largest_bbox(detection_results)
         face = Face(
-			bbox=detection_results[0][:4], 
-			kps=detection_results[1][0], 
-			det_score=detection_results[0][-1]
+			bbox=argest_bbox[0][:4], 
+			kps=argest_bbox[1][0], 
+			det_score=argest_bbox[0][-1]
 		)
         encode_results = self.face_encode.get(image, face)
-        return encode_results
+        return detection_results,argest_bbox,encode_results
     
     def check_face_liveness(self, image):
         live = True
@@ -65,32 +65,31 @@ class FaceRecognition(Thread):
     def run(self):
         while True:
             image =  self.frame_queue.get()["image"]
+            result = {}
             if self.recognize:
-                print("Doing...")
                 if image is None:
                     raise
-                embed_vector = self.encode(image)
-                if embed_vector.size == 0:
-                    return "Nothing"
+                detection_results,largest_bbox,embed_vector = self.encode(image)
+                result["detection_results"] = detection_results
+                result["largest_bbox"] = largest_bbox
+                if embed_vector.size != 0:
+                    state = ""
+                    face_live = self.check_face_liveness(image)
+                    if face_live is not None:
+                        if face_live:
+                            state = "real"
+                        else:
+                            state = "fake"
+                    person_info = self.recognizer.search(embed_vector)
 
-                state = ""
-                face_live = self.check_face_liveness(image)
-                if face_live is not None:
-                    if face_live:
-                        state = "real"
+                    # #TODO check
+                    if person_info["person_id"] != "unrecognize":
+                        person_doc = PersonDoc(id=person_info["person_id"], name=person_info["person_name"])
+                        person_dict = person_doc.dict()
+                        person_dict["state"] = state
                     else:
-                        state = "fake"
-
-                person_info = self.recognizer.search(embed_vector)
-
-                # #TODO check
-                try:
-                    person_doc = PersonDoc(id=person_info["person_id"], name=person_info["person_name"])
-                    person_dict = person_doc.dict()
-                    person_dict["state"] = state
-                    print(person_dict)
-                except:
-                    continue
-            else:
-                result = {"image": image}
-                self.result_queue.put(result)
+                        person_dict = {"id": "unknown"}
+                    result["person_dict"] = person_dict
+            
+            result["image"] = image
+            self.result_queue.put(result)
