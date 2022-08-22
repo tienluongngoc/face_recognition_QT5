@@ -14,7 +14,7 @@ from configs.config_instance import FaceRecognitionConfigInstance
 
 class PersonManagement:
 	def __init__(self, face_config, db_instance: PersonDatabase) -> None:
-		self.face_config = face_config
+		self.face_config = face_config.faces
 		self.db_instance = db_instance
 		self.verify = PersonVerify(db_instance=db_instance)
 		config = FaceRecognitionConfigInstance.__call__().get_config()

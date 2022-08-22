@@ -14,6 +14,10 @@ from apps.data_queue import DataQueue, ResultQueue
 from apps.face_recognition_app import FaceRecognitionApp
 import time
 from database import DatabaseInstance
+from apps.person_management import PersonManagement
+from apps.face_management import FaceManagement
+from configs.config_instance import FaceRecognitionConfigInstance
+from PyQt5.QtWidgets import QDialog, QApplication, QFileDialog
 class Test:
     def __init__(self) -> None:
         self.MainWindow = QtWidgets.QMainWindow()
@@ -23,9 +27,17 @@ class Test:
         self.timer = QTimer()
         self.timer.timeout.connect(self.viewCam)
         self.ui.pushButton.clicked.connect(self.controlTimer)
+        self.ui.bt_add_person.clicked.connect(self.add_person)
+        self.ui.bt_delete_person.clicked.connect(self.delete_person)
+        self.ui.bt_chose_file.clicked.connect(self.open_file_name_dialog)
+        self.ui.bt_add_face.clicked.connect(self.add_face)
+        # self.ui.table_people.selectionModel().selectionChanged.connect(self.on_selection_changed)
+        self.ui.table_people.cellClicked.connect(self.cell_was_clicked)
 
+        self.config =  FaceRecognitionConfigInstance.__call__().get_config()
         self.database = DatabaseInstance.__call__().get_database()
-        # self.person_coll = self.database.get_person_coll()
+        self.person_management =  PersonManagement(self.config, self.database)
+        self.face_management = FaceManagement(self.config, self.database)
         self.face_recognition_app = FaceRecognitionApp()
         self.task = self.face_recognition_app.get_task()
         self.frame_queue = DataQueue.__call__().get_frame_queue()
@@ -41,18 +53,78 @@ class Test:
         self.face_recognition_app.run()
 
         self.init()
-        self.load_data()
+        self.load_all_people()
 
-    def load_data(self):
-        # print("oke")
+    def on_selection_changed(self, selected, deselected):
+        # for ix in selected.indexes():
+            # print(ix.row(), ix.column())
+            # print(self.ui.table_people.takeVerticalHeaderItem(ix.row()))
+        row = self.ui.table_people.currentRow()
+        id = self.ui.table_people.itemAt(row, 1).text()
+        name = self.ui.table_people.itemAt(row, 2).text()
+        print(id, name)
+     
+    def cell_was_clicked(self, row, column):
+        # row = self.ui.table_people.currentRow()
+        id = self.ui.table_people.itemAt(2, 2).text()
+        print(id)
+        # name = self.ui.table_people.itemAt(1, 2).text()
+        # print(id, name)
+        # print("Row %d and Column %d was clicked" % (row, column))
+        pass
+    
+    def load_all_faces(self):
+        pass
+
+    def load_all_people(self):
         all_people = self.database.get_all_people()
-        # print(self.database.number_of_people())
         row=0
         self.ui.table_people.setRowCount(self.database.number_of_people())
         for person in all_people:
             self.ui.table_people.setItem(row, 0, QtWidgets.QTableWidgetItem(person["name"]))
             self.ui.table_people.setItem(row, 1, QtWidgets.QTableWidgetItem(str(person["id"])))
             row=row+1
+
+    def add_person(self):
+        name = self.ui.tb_add_person_name.text()
+        id = self.ui.tb_add_person_id.text()
+        res = self.person_management.insert_person(id, name)
+        print(res)
+        self.load_all_people()
+    
+    def delete_person(self):
+        id = self.ui.tb_add_person_id.text()
+        res = self.person_management.delete_person_by_id(id)
+        print(res)
+        self.load_all_people()
+    
+    def update_person_by_id(self):
+        name = self.ui.tb_add_person_name.text()
+        id = self.ui.tb_add_person_id.text()
+        res = self.person_management.update_person_name(id, name)
+        print(res)
+        self.load_all_people()
+    
+    def update_person_by_name(self):
+        name = self.ui.tb_add_person_name.text()
+        id = self.ui.tb_add_person_id.text()
+        res = self.person_management.update_person_id(id, name)
+        print(res)
+        self.load_all_people()
+
+    def open_file_name_dialog(self):
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        file_name, _ = QFileDialog.getOpenFileName(self.MainWindow,"QFileDialog.getOpenFileName()", "","All Files (*);;Python Files (*.py)", options=options)
+        self.ui.tb_path.setText(file_name)
+
+    def add_face(self):
+        # TODO checkpath
+        image = cv2.imread(self.ui.tb_path.text())
+        id = self.ui.tb_add_person_id.text()
+        res = self.face_management.insert_face(id, "01", image)
+        print(res)
+
     
     def show_face(self):
         self.face_list = [self.ui.face_1,self.ui.face_2, self.ui.face_3, self.ui.face_4, self.ui.face_5]
@@ -84,10 +156,6 @@ class Test:
             cv2.putText(image, text, (int(l_bbox[0])-30, int(l_bbox[1])), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 1, cv2.LINE_AA)
             cv2.rectangle(image, (int(l_bbox[0]), int(l_bbox[1])), (int(l_bbox[2]), int(l_bbox[3])), color, 1)
         return image
-
-
-    
-
     
     def init(self):
         _translate = QtCore.QCoreApplication.translate

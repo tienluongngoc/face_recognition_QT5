@@ -50,7 +50,7 @@ class VideoReader(Subject, Thread):
                                     }
                         self.frame_queue.put(frame_data)
                         self.notify()
-                        print("frame queue size: ", self.frame_queue.qsize())
+                        # print("frame queue size: ", self.frame_queue.qsize())
                     if self.frame_queue.qsize() >= 90:
                         self.frame_queue.get()
                     self.new_frame_time = time.time()

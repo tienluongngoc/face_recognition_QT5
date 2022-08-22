@@ -25,7 +25,7 @@ class FaceRecognition(Thread):
         self.face_detection = FaceDetectionFactory(face_recognition_config).get_engine()
         self.face_encode = FaceEncodeFactory(face_recognition_config).get_engine()
         self.recognizer = FaceRecognitionFactory.__call__(face_recognition_config).get_engine()
-        self.recognizer.initialize()
+        # self.recognizer.initialize()
         self.recognize = False
     
     def enable(self):

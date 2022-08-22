@@ -30,6 +30,7 @@ class FAISS(metaclass=Singleton):
 		self.change_db_worker = threading.Thread(target=self.run_change_db)
 		self.reload_model_worker = threading.Thread(target=self.run_reload_model)
 		self.change_all_db_worker = threading.Thread(target=self.run_change_all_db)
+		self.initialize()
 
 	def initialize(self):
 		self.local_db.initialize_local_db()

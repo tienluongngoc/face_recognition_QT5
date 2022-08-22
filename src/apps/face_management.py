@@ -20,10 +20,14 @@ from apps.face_recognition_factory import FaceRecognitionFactory
 from configs.config_instance import FaceRecognitionConfigInstance
 from .face_recognition import FaceRecognition
 
+
+
+
+
 class FaceManagement(FaceRecognition):
     def __init__(self, face_config, db_instance: PersonDatabase) -> None:
         super(FaceManagement, self).__init__()
-        self.face_config = face_config
+        self.face_config = face_config.faces
         self.db_instance = db_instance
         config = FaceRecognitionConfigInstance.__call__().get_config()
         self.face_recognizer = FaceRecognitionFactory.__call__(config).get_engine()
