@@ -371,9 +371,9 @@
          <property name="geometry">
           <rect>
            <x>820</x>
-           <y>210</y>
-           <width>491</width>
-           <height>331</height>
+           <y>260</y>
+           <width>521</width>
+           <height>281</height>
           </rect>
          </property>
          <property name="text">
@@ -464,8 +464,8 @@
           <rect>
            <x>1200</x>
            <y>10</y>
-           <width>111</width>
-           <height>131</height>
+           <width>131</width>
+           <height>121</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_23">
@@ -478,7 +478,7 @@
              </size>
             </property>
             <property name="text">
-             <string>Add</string>
+             <string>Insert Person</string>
             </property>
            </widget>
           </item>
@@ -491,7 +491,7 @@
              </size>
             </property>
             <property name="text">
-             <string>Update</string>
+             <string>Update person</string>
             </property>
            </widget>
           </item>
@@ -504,7 +504,7 @@
              </size>
             </property>
             <property name="text">
-             <string>Delete</string>
+             <string>Delete person</string>
             </property>
            </widget>
           </item>
@@ -530,62 +530,82 @@
           </property>
          </column>
         </widget>
-        <widget class="QPushButton" name="bt_add_face">
-         <property name="geometry">
-          <rect>
-           <x>900</x>
-           <y>160</y>
-           <width>70</width>
-           <height>40</height>
-          </rect>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>40</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>70</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Add face</string>
-         </property>
-        </widget>
-        <widget class="QPushButton" name="bt_chose_file">
+        <widget class="QWidget" name="verticalLayoutWidget_4">
          <property name="geometry">
           <rect>
            <x>820</x>
-           <y>160</y>
-           <width>75</width>
-           <height>40</height>
+           <y>180</y>
+           <width>351</width>
+           <height>80</height>
           </rect>
          </property>
-         <property name="maximumSize">
-          <size>
-           <width>75</width>
-           <height>50</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Chose file</string>
-         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <item>
+             <widget class="QLabel" name="label_4">
+              <property name="text">
+               <string>File path</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="tb_path">
+              <property name="text">
+               <string>...image/face/path/</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_5">
+            <item>
+             <widget class="QLabel" name="label_3">
+              <property name="text">
+               <string>Face ID</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="tb_face_id"/>
+            </item>
+           </layout>
+          </item>
+         </layout>
         </widget>
-        <widget class="QLineEdit" name="tb_path">
+        <widget class="QWidget" name="verticalLayoutWidget_5">
          <property name="geometry">
           <rect>
-           <x>990</x>
+           <x>1199</x>
            <y>170</y>
-           <width>331</width>
-           <height>25</height>
+           <width>141</width>
+           <height>89</height>
           </rect>
          </property>
-         <property name="text">
-          <string>...image/face/path/</string>
-         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <item>
+           <widget class="QPushButton" name="bt_chose_file">
+            <property name="text">
+             <string>chose file path</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="bt_add_face">
+            <property name="text">
+             <string>Insert face</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="bt_delete_face">
+            <property name="text">
+             <string>Delete face</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </widget>
       </widget>

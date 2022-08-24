@@ -16,7 +16,7 @@ class VideoReader(Subject, Thread):
         super(VideoReader, self).__init__()
         # self.camera_url = "images/cr7.mp4"
         # self.camera_url = "rtsp://admin:ATDJTN@192.168.1.99:554/H.264"
-        self.camera_url = "images/cr7_interview.mp4"
+        self.camera_url = 0
         self.sleep_time = 0.05 #config[""]
         # self.camera_id = config["camera_id"]
         # self.location = config["location"]

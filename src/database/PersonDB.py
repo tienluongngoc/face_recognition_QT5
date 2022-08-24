@@ -22,6 +22,9 @@ class PersonDatabase(BaseDatabase):
 		people = self.personColl.find()
 		return people
 	
+	def get_all_face(self, perso_id):
+		pass
+	
 	def number_of_people(self):
 		count = self.personColl.count_documents({})
 		return count

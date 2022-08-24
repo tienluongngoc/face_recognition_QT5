@@ -1,5 +1,5 @@
 import sys
-from turtle import color
+from turtle import color, width
 sys.path.append("./src")
 from PyQt5.QtWidgets import QApplication,QMainWindow
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -18,6 +18,9 @@ from apps.person_management import PersonManagement
 from apps.face_management import FaceManagement
 from configs.config_instance import FaceRecognitionConfigInstance
 from PyQt5.QtWidgets import QDialog, QApplication, QFileDialog
+import numpy as np
+from uuid import uuid4
+
 class Test:
     def __init__(self) -> None:
         self.MainWindow = QtWidgets.QMainWindow()
@@ -32,50 +35,128 @@ class Test:
         self.ui.bt_chose_file.clicked.connect(self.open_file_name_dialog)
         self.ui.bt_add_face.clicked.connect(self.add_face)
         # self.ui.table_people.selectionModel().selectionChanged.connect(self.on_selection_changed)
-        self.ui.table_people.cellClicked.connect(self.cell_was_clicked)
+        # self.ui.table_people.cellClicked.connect(self.cell_was_clicked)
+        self.ui.table_people.cellClicked.connect(self.person_table_click)
+        self.ui.table_face.cellClicked.connect(self.show_preview_face)
+        self.ui.bt_delete_face.clicked.connect(self.delete_face)
 
         self.config =  FaceRecognitionConfigInstance.__call__().get_config()
         self.database = DatabaseInstance.__call__().get_database()
         self.person_management =  PersonManagement(self.config, self.database)
         self.face_management = FaceManagement(self.config, self.database)
-        self.face_recognition_app = FaceRecognitionApp()
-        self.task = self.face_recognition_app.get_task()
+        # self.face_recognition_app = FaceRecognitionApp()
+        # self.task = self.face_recognition_app.get_task()
         self.frame_queue = DataQueue.__call__().get_frame_queue()
         self.result_queue = ResultQueue.__call__().get_result_queue()
 
-        self.face = cv2.resize(cv2.imread("images/face.png"), (100,100))
+        # self.face = cv2.resize(cv2.imread("images/face.png"), (100,100))
         self.timer.start(0)
         self.viewCam()
-        self.show_face()
-        self.video_width = 1000
-        self.video_height = 560
         
-        self.face_recognition_app.run()
+        # self.show_face()
+        # self.video_width = 1000
+        # self.video_height = 560
+        
+        # self.face_recognition_app.run()
 
         self.init()
         self.load_all_people()
+        self.init_face_table()
+        # self.init_face_table()
 
-    def on_selection_changed(self, selected, deselected):
-        # for ix in selected.indexes():
-            # print(ix.row(), ix.column())
-            # print(self.ui.table_people.takeVerticalHeaderItem(ix.row()))
-        row = self.ui.table_people.currentRow()
-        id = self.ui.table_people.itemAt(row, 1).text()
-        name = self.ui.table_people.itemAt(row, 2).text()
-        print(id, name)
-     
-    def cell_was_clicked(self, row, column):
-        # row = self.ui.table_people.currentRow()
-        id = self.ui.table_people.itemAt(2, 2).text()
-        print(id)
-        # name = self.ui.table_people.itemAt(1, 2).text()
-        # print(id, name)
-        # print("Row %d and Column %d was clicked" % (row, column))
-        pass
+
+    def person_table_click(self):
+        current_row = self.ui.table_people.currentRow()
+        name = self.ui.table_people.item(current_row, 0).text()
+        id = self.ui.table_people.item(current_row, 1).text()
+        self.ui.tb_add_person_id.setText(id)
+        self.ui.tb_add_person_name.setText(name)
+        self.load_all_faces(id)
+        self.init_face_text_box()
+
+    def face_table_click(self):
+        current_row = self.ui.table_face.currentRow()
+        try:
+            id = self.ui.table_face.item(current_row, 0).text()
+            path = self.ui.table_face.item(current_row, 1).text()
+            self.ui.tb_path.setText(path)
+            self.ui.tb_face_id.setText(id)
+        except:
+            pass
+        
+
+        # self.load_all_faces(id)
+
+
+    def show_preview_face(self):
+        self.face_table_click()
+        try:
+            current_row = self.ui.table_face.currentRow()
+            img_path = self.ui.table_face.item(current_row, 1).text()
+            image = cv2.imread(img_path)
+            self.view_image(image, 491, 321, self.ui.face_preview)
+        except:
+            image = cv2.imread("libs/avata.jpg")
+            self.view_image(image, 491, 321, self.ui.face_preview)
+
     
-    def load_all_faces(self):
-        pass
+    def view_image(self, image: np.array, width, height, item):
+        image = cv2.resize(image, (width, height))
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        height, width, channel = image.shape
+        step = channel * width
+        qImg = QImage(image.data, width, height, step, QImage.Format_RGB888)
+        item.setPixmap(QPixmap.fromImage(qImg))
 
+    
+    def load_all_faces(self, persion_id):
+        faces = self.face_management.select_all_face_of_person(persion_id, 0,10)
+        self.ui.table_face.setRowCount(len(faces))
+        for row,face in enumerate(faces):
+            self.ui.table_face.setItem(row, 0, QtWidgets.QTableWidgetItem(face["id"]))
+            self.ui.table_face.setItem(row, 1, QtWidgets.QTableWidgetItem(face["imgPath"]))
+
+        self.show_preview_face()
+        self.init_face_preview()
+
+    def init_face_table(self):
+        number_item = self.ui.table_people.rowCount()
+        if number_item != 0:
+            id = self.ui.table_people.item(0, 1).text()
+            self.load_all_faces(id)
+            self.init_face_text_box()
+    
+    def init_person_text_box(self):
+        id = self.ui.table_people.item(0, 1).text()
+        name = self.ui.table_people.item(0, 0).text()
+        self.ui.tb_add_person_id.setText(id)
+        self.ui.tb_add_person_name.setText(name)
+
+    
+    def init_face_text_box(self):
+        number_items = self.ui.table_face.rowCount()
+        if number_items != 0:
+            path = self.ui.table_face.item(0, 1).text()
+            id = self.ui.table_face.item(0, 0).text()
+            self.ui.tb_face_id.setText(id)
+            self.ui.tb_path.setText(path)
+        else:
+            self.ui.tb_face_id.setText("")
+            self.ui.tb_path.setText("")
+
+
+
+    def init_face_preview(self):
+        number_item = self.ui.table_face.rowCount()
+        if number_item != 0:
+            img_path = self.ui.table_face.item(0, 1).text()
+            image = cv2.imread(img_path)
+            self.view_image(image, 491, 321, self.ui.face_preview)
+        
+
+    
+
+    
     def load_all_people(self):
         all_people = self.database.get_all_people()
         row=0
@@ -84,6 +165,14 @@ class Test:
             self.ui.table_people.setItem(row, 0, QtWidgets.QTableWidgetItem(person["name"]))
             self.ui.table_people.setItem(row, 1, QtWidgets.QTableWidgetItem(str(person["id"])))
             row=row+1
+        self.init_person_text_box()
+        # self.init_face_text_box()
+
+    def delete_face(self):
+        person_id = self.ui.tb_add_person_id.text()
+        face_id = self.ui.tb_face_id.text()
+        self.face_management.delete_face_by_id(person_id, face_id)
+        self.load_all_faces(person_id)
 
     def add_person(self):
         name = self.ui.tb_add_person_name.text()
@@ -121,9 +210,14 @@ class Test:
     def add_face(self):
         # TODO checkpath
         image = cv2.imread(self.ui.tb_path.text())
-        id = self.ui.tb_add_person_id.text()
-        res = self.face_management.insert_face(id, "01", image)
-        print(res)
+        person_id = self.ui.tb_add_person_id.text()
+        face_id = self.ui.tb_face_id.text()
+        all_faces = self.face_management.select_all_face_of_person(person_id,0,10)
+        
+        face_ids = [int(face["id"]) for face in all_faces]
+        face_id = 0 if len(face_ids)==0 else  max(face_ids)+1
+        res = self.face_management.insert_face(person_id, str(face_id), image)
+        self.load_all_faces(person_id)
 
     
     def show_face(self):

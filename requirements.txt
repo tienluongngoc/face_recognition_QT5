@@ -12,6 +12,6 @@ tritonclient
 opencv-python
 requests
 scikit-image
-faiss-cpu
+# faiss-cpu
 faiss-gpu
 grpcio

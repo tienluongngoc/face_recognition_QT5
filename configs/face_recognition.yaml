@@ -1,11 +1,11 @@
 api:
-  server_host: "192.168.1.147"
+  server_host: "192.168.1.159"
   server_port: 9950
   log_level: "info"
   log_config: "configs/log_config.ini"
 
 mongodb:
-  hostname: "192.168.1.147"
+  hostname: "192.168.1.159"
   port: 27017
   user: tienln 
   password: tienln
@@ -21,7 +21,7 @@ faces:
   end: ".png"
 
 model_server:
-  host: "192.168.1.147"
+  host: "192.168.1.159"
   port: 7501
   running: false
 
@@ -44,3 +44,4 @@ models:
       dumpy: null
       faiss_cpu: configs/models/faiss.yaml
       faiss_gpu: configs/models/faiss.yaml
+gui: configs/gui_config.yaml
