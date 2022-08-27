@@ -1,4 +1,3 @@
-from configs import gui_config
 from .arcface_trt_config import ArcFaceTRTConfig
 from .base_config import BaseConfig
 from .scrfd_config import SCRFDConfig
@@ -6,7 +5,7 @@ from .arcface_config import ArcFaceConfig
 from .faiss_config import FaissConfig
 from .fasnet_config import FASNetConfig
 from .yolov5_config import Yolov5Config
-from .gui_config import GUIConfig
+from .ui_config import UIConfig
 
 class Singleton(type):
     _instances = {}
@@ -87,8 +86,8 @@ class FaceRecogAPIConfig(BaseConfig, metaclass=Singleton):
 		return self.config["model_server"]
 
 	@property
-	def gui(self):
-		config_path = self.config["gui"]
-		gui_config = GUIConfig(config_path)
-		return gui_config
+	def ui(self):
+		config_path = self.config["ui"]
+		ui_config = UIConfig(config_path)
+		return ui_config
 	

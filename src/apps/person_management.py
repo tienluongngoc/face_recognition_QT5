@@ -66,22 +66,29 @@ class PersonManagement:
 			{"id": person_id},
 			{"$set": {"name": name}}
 		)
-
 		self.face_recognizer.add_change_event(
 			event=ChangeEvent.update_name,
 			params=[person_id, name]
 		)
+		return Validation.UPDATE_PERSON_NAME
 
 	def update_person_id(self, person_id: str, new_id: str):
 		person_id, new_id = unquote(person_id), unquote(new_id)
 		if not self.verify.check_person_by_id(person_id):
 			return Validation.PERSON_ID_NOT_FOUND 
+		person = self.select_person_by_id(person_id)
+		for face in person["faces"]:
+			face["imgPath"] = face["imgPath"].replace(person_id, new_id)
 		self.db_instance.personColl.update_one(
 			{"id": person_id},
-			{"$set": {"id": new_id}}
+			{"$set": {"id": new_id}})
+
+		self.db_instance.personColl.update_one(
+			{"id": new_id},
+			{"$set": {"faces": person["faces"]}}
 		)
-		current_images_path = os.path.join(
-			self.face_config["path"], person_id)
+
+		current_images_path = os.path.join(self.face_config["path"], person_id)
 		if os.path.exists(current_images_path):
 			new_images_path = os.path.join(
 				self.face_config["path"], new_id)
@@ -91,10 +98,11 @@ class PersonManagement:
 			event=ChangeEvent.update_id,
 			params=[person_id, new_id]
 		)
+		return Validation.UPDATE_PERSON_ID
 
 	def delete_person_by_id(self, id: str):
 		if not self.verify.check_person_by_id(id):
-			raise 
+			return  Validation.PERSON_ID_NOT_FOUND 
 		image_dir = os.path.join(self.face_config["path"], id)
 		if os.path.exists(image_dir):
 			shutil.rmtree(image_dir)
@@ -105,6 +113,7 @@ class PersonManagement:
 			event=ChangeEvent.remove_person,
 			params=[id]
 		)
+		return Validation.DETETE_PERSON_SUCCESSFULY
 
 	def delete_all_people(self):
 		self.db_instance.personColl.delete_many({})

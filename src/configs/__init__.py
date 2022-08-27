@@ -6,7 +6,7 @@ from .faiss_config import FaissConfig
 from .yolov5_config import Yolov5Config
 from .arcface_trt_config import ArcFaceTRTConfig
 from .config_instance import FaceRecognitionConfigInstance
-from .gui_config import GUIConfig
+from .ui_config import UIConfig
 all_config_path = "configs/face_recognition.yaml"
 all_config = FaceRecogAPIConfig(config_path=all_config_path)
 

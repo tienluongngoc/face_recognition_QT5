@@ -208,7 +208,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_22.addWidget(self.tb_add_person_role)
         self.verticalLayout_2.addLayout(self.horizontalLayout_22)
         self.verticalLayoutWidget_9 = QtWidgets.QWidget(self.tab_2)
-        self.verticalLayoutWidget_9.setGeometry(QtCore.QRect(1200, 10, 131, 121))
+        self.verticalLayoutWidget_9.setGeometry(QtCore.QRect(1200, 10, 131, 134))
         self.verticalLayoutWidget_9.setObjectName("verticalLayoutWidget_9")
         self.verticalLayout_23 = QtWidgets.QVBoxLayout(self.verticalLayoutWidget_9)
         self.verticalLayout_23.setContentsMargins(0, 0, 0, 0)

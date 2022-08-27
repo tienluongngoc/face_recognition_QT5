@@ -1,6 +1,6 @@
 import sys
 from turtle import color, width
-sys.path.append("./src")
+# sys.path.append("./src")
 from PyQt5.QtWidgets import QApplication,QMainWindow
 from PyQt5 import QtCore, QtGui, QtWidgets
 import cv2
@@ -20,8 +20,14 @@ from configs.config_instance import FaceRecognitionConfigInstance
 from PyQt5.QtWidgets import QDialog, QApplication, QFileDialog
 import numpy as np
 from uuid import uuid4
+from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QPushButton
+from schemas.validation import Validation
 
-class Test:
+from .ui_utils import ConfirmDialog, InfoDialog
+from .update_person import UpDatePersonWindow
+
+
+class FaceRecognitionUI:
     def __init__(self) -> None:
         self.MainWindow = QtWidgets.QMainWindow()
         self.ui = Ui_MainWindow()
@@ -32,6 +38,7 @@ class Test:
         self.ui.pushButton.clicked.connect(self.controlTimer)
         self.ui.bt_add_person.clicked.connect(self.add_person)
         self.ui.bt_delete_person.clicked.connect(self.delete_person)
+        self.ui.bt_update_person.clicked.connect(self.update_person)
         self.ui.bt_chose_file.clicked.connect(self.open_file_name_dialog)
         self.ui.bt_add_face.clicked.connect(self.add_face)
         # self.ui.table_people.selectionModel().selectionChanged.connect(self.on_selection_changed)
@@ -41,6 +48,7 @@ class Test:
         self.ui.bt_delete_face.clicked.connect(self.delete_face)
 
         self.config =  FaceRecognitionConfigInstance.__call__().get_config()
+        self.ui_config = self.config.ui
         self.database = DatabaseInstance.__call__().get_database()
         self.person_management =  PersonManagement(self.config, self.database)
         self.face_management = FaceManagement(self.config, self.database)
@@ -63,6 +71,10 @@ class Test:
         self.load_all_people()
         self.init_face_table()
         # self.init_face_table()
+
+    def update_person(self):                                             # <===
+        self.update_person_window = UpDatePersonWindow(self)
+        # self.load_all_people()
 
 
     def person_table_click(self):
@@ -183,16 +195,23 @@ class Test:
     
     def delete_person(self):
         id = self.ui.tb_add_person_id.text()
-        res = self.person_management.delete_person_by_id(id)
-        print(res)
+        message = f"Do you want to delete person id: {id}?"
+        confirm_dlg = ConfirmDialog(self.MainWindow, message)
+        if confirm_dlg.exec():
+            res = self.person_management.delete_person_by_id(id)
+            if res == Validation.DETETE_PERSON_SUCCESSFULY:
+                info_dlg = InfoDialog(self.MainWindow, f"Delete person id: {id}, successfuly!")
+                info_dlg.exec()
         self.load_all_people()
     
     def update_person_by_id(self):
-        name = self.ui.tb_add_person_name.text()
-        id = self.ui.tb_add_person_id.text()
-        res = self.person_management.update_person_name(id, name)
-        print(res)
-        self.load_all_people()
+        update_person = UpDatePerson()
+        update_person.show()
+        # name = self.ui.tb_add_person_name.text()
+        # id = self.ui.tb_add_person_id.text()
+        # res = self.person_management.update_person_name(id, name)
+        # print(res)
+        # self.load_all_people()
     
     def update_person_by_name(self):
         name = self.ui.tb_add_person_name.text()
@@ -256,6 +275,17 @@ class Test:
         self.ui.tabWidget.setTabText(self.ui.tabWidget.indexOf(self.ui.tab), _translate("MainWindow", "Camera"))
         self.ui.tabWidget.setTabText(self.ui.tabWidget.indexOf(self.ui.tab_2), _translate("MainWindow", "Quản lý"))
         self.ui.label.setText(_translate("MainWindow", ""))
+        self.people_tabale_properties()
+        self.face_table_properties()
+        
+    
+    def people_tabale_properties(self):
+        self.ui.table_people.setColumnWidth(0,215)
+        self.ui.table_people.setColumnWidth(1,110)
+
+    def face_table_properties(self):
+        self.ui.table_face.setColumnWidth(0,45)
+        self.ui.table_face.setColumnWidth(1,265)
 
     
     def show_window(self):
@@ -280,9 +310,9 @@ class Test:
             self.ui.pushButton.setText("Start")
             self.task["face_recognizer"].disable()
 
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    test = Test()
-    test.show_window()
-    sys.exit(app.exec_())
+# if __name__ == "__main__":
+#     import sys
+#     app = QtWidgets.QApplication(sys.argv)
+#     test = FaceRecognitionUI()
+#     test.show_window()
+#     sys.exit(app.exec_())
