@@ -56,8 +56,8 @@ class ArcFaceTRTConfig(ModelConfig):
 		return result
 
 	@property
-	def confidence_threshold(self):
-		result = self.config["confidence_threshold"]
+	def threshold(self):
+		result = self.config["threshold"]
 		return result
 
 	@property
@@ -72,3 +72,7 @@ class ArcFaceTRTConfig(ModelConfig):
 	@property
 	def input_std(self):
 		return self.config["input_std"]
+
+	@property
+	def engine_default(self):
+		return self.config["engine_default"]

@@ -1,14 +1,15 @@
-onnx: weights/arcface.onnx
+onnx: models/arcface.onnx
 engine: weights/arcface.engine
 device: "cuda"
-half: True
+half: False
 input_name: "data"
 input_shape: [1,3,112,112]
 output_name: "fc1"
 output_shape: [512] 
 max_workspace: 4 #GB
 stride_max: 32
-confidence_threshold: 0.5
+threshold: 0.5
 iou_threshold: 0.5
 input_mean: 0.0
 input_std: 1.0
+engine_default: "ArcFace"

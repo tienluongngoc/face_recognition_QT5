@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 import tensorrt as trt 
 from utils.logger import Logger
-
+import os.path
 class TRTModel(nn.Module):
     def __init__(self, config):
         super().__init__()
@@ -18,7 +18,8 @@ class TRTModel(nn.Module):
         self.output_name = config.output_name
         self.max_workspace_size = config.max_workspace
         self.logger = Logger.__call__().get_logger()
-        # self.export_engine()
+        
+        # if not os.path.exists(selPyQt5
 
         self.logger.info(f'Loading {self.engine} for TensorRT inference...')
         Binding = namedtuple('Binding', ('name', 'dtype', 'shape', 'data', 'ptr'))

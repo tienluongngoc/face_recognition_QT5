@@ -117,9 +117,7 @@ class FaceValidation:
 				return ImageValidation.IMAGE_IS_VALID
 			else:
 				current_embedding_vectors = np.array(current_embedding_vectors, dtype=np.float32)
-				sim_values = [self.face_encode.is_same(
-					np.array(x, dtype=np.float32), np.array(face_encoded, dtype=np.float32)
-					) for x in current_embedding_vectors]
+				sim_values = [self.face_encode.is_same(np.array(x, dtype=np.float32), np.array(face_encoded, dtype=np.float32)) for x in current_embedding_vectors]
 				if np.array(sim_values).all():
 					return ImageValidation.IMAGE_IS_VALID
 				else:

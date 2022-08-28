@@ -36,5 +36,15 @@
 
 # cv2.imwrite("test.jpg", img0)
 
-# import sys
-# sys.path.append("./src")
+import sys
+sys.path.append("./src")
+
+from configs.arcface_trt_config import ArcFaceTRTConfig
+from inferences.face_encode.arcface_trt import ArceFaceTRT
+# from configs.yolov5_config import Yolov5Config
+# from inferences.face_detection.yolov5 import YOLOV5
+
+config = ArcFaceTRTConfig("configs/models/arcface_trt.yaml")
+arcface = ArceFaceTRT(config)
+# config = Yolov5Config("configs/models/yolov5.yaml")
+# yolo5 = YOLOV5(config)

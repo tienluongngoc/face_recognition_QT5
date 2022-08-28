@@ -30,19 +30,8 @@ class UpDatePersonWindow:
         if confirm_dlg.exec():
             res_1 = self.person_management.update_person_name(self.current_id, new_name)
             res_2 = self.person_management.update_person_id(self.current_id, new_id)
-            print(res_1)
-            print(res_2)
-
-                        # if res == Validation.UPDATE_PERSON_NAME:
-                # info_dlg = InfoDialog(self.MainWindow, f"Delete person id: {id}, successfuly!")
-                # info_dlg.exec()
-            # print(res)
+            if res_1 ==  Validation.UPDATE_PERSON_NAME and res_2 == Validation.UPDATE_PERSON_ID:
+                info_dlg = InfoDialog(self.this_window, f"Update successfuly!")
+                info_dlg.exec()
             self.main_window.load_all_people()
             self.this_window.hide()
-
-        #     res = self.person_management.delete_person_by_id(id)
-        #     if res == Validation.DETETE_PERSON_SUCCESSFULY:
-        #         info_dlg = InfoDialog(self.MainWindow, f"Delete person id: {id}, successfuly!")
-        #         info_dlg.exec()
-        # self.load_all_people()
-        # print(id, name)

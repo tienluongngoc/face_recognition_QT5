@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
-   
+# from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QPushButton
+
 # Create a VideoCapture object and read from input file
 cap = cv2.VideoCapture(0)
    
@@ -14,21 +15,22 @@ while(cap.isOpened()):
   # Capture frame-by-frame
   ret, frame = cap.read()
   if ret == True:
+    print(frame.shape)
    
     # Display the resulting frame
-    cv2.imshow('Frame', frame)
+    # cv2.imshow('Frame', frame)
    
     # Press Q on keyboard to  exit
-    if cv2.waitKey(25) & 0xFF == ord('q'):
-      break
+    # if cv2.waitKey(25) & 0xFF == ord('q'):
+    #   break
    
   # Break the loop
-  else: 
-    break
+  # else: 
+  #   break
    
 # When everything done, release 
 # the video capture object
-cap.release()
+# cap.release()
    
-# Closes all the frames
-cv2.destroyAllWindows()
+# # Closes all the frames
+# cv2.destroyAllWindows()

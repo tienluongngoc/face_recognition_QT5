@@ -4,14 +4,18 @@ Pillow
 blinker
 pyyaml
 onnx
+torch
+torchvision
+nvidia-tensorrt
 onnxruntime
 uvicorn
 aiofiles
 python-multipart
 tritonclient
-opencv-python
+opencv-python-headless
 requests
 scikit-image
 # faiss-cpu
+PyQt5
 faiss-gpu
 grpcio

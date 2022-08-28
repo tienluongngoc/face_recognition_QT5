@@ -1,7 +1,7 @@
 onnx: weights/yolov5s_face.onnx
-engine: weights/yolov5s_face_fp16.engine
+engine: weights/yolov5s_face.engine
 device: "cuda"
-half: True
+half: False
 input_name: "input"
 input_shape: [1,3,640,640]
 output_name: "output"

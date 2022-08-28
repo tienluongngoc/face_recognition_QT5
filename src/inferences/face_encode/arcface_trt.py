@@ -14,7 +14,7 @@ class ArceFaceTRT(TRTModel):
         self.output_shape = config.output_shape
         self.input_shape = tuple([config.input_shape[2], config.input_shape[3]])
         self.stride_max = config.stride_max
-        self.confidence_threshold = config.confidence_threshold
+        self.threshold = config.threshold
         self.iou_threshold = config.iou_threshold
 
     def get(self, img: np.ndarray, face: face_detect.Face):
@@ -34,3 +34,17 @@ class ArceFaceTRT(TRTModel):
         embedding = self(blob)
         embedding = embedding.cpu().detach().numpy()
         return embedding
+
+    def compute_sim(self, feat1, feat2):
+        from numpy.linalg import norm
+        feat1 = feat1.ravel()
+        feat2 = feat2.ravel()
+        sim = np.dot(feat1, feat2) / (norm(feat1) * norm(feat2))
+        return sim
+
+    def is_same(self, feat1, feat2):
+        sim = self.compute_sim(feat1, feat2)
+        if sim > self.config.threshold:
+            return True
+        else:
+            return False

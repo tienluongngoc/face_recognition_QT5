@@ -3,7 +3,6 @@ from turtle import color, width
 # sys.path.append("./src")
 from PyQt5.QtWidgets import QApplication,QMainWindow
 from PyQt5 import QtCore, QtGui, QtWidgets
-import cv2
 from PyQt5.QtGui import QImage
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import QTimer
@@ -22,6 +21,7 @@ import numpy as np
 from uuid import uuid4
 from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QPushButton
 from schemas.validation import Validation
+import cv2
 
 from .ui_utils import ConfirmDialog, InfoDialog
 from .update_person import UpDatePersonWindow
@@ -36,45 +36,47 @@ class FaceRecognitionUI:
         self.timer = QTimer()
         self.timer.timeout.connect(self.viewCam)
         self.ui.pushButton.clicked.connect(self.controlTimer)
+
         self.ui.bt_add_person.clicked.connect(self.add_person)
         self.ui.bt_delete_person.clicked.connect(self.delete_person)
         self.ui.bt_update_person.clicked.connect(self.update_person)
+
         self.ui.bt_chose_file.clicked.connect(self.open_file_name_dialog)
         self.ui.bt_add_face.clicked.connect(self.add_face)
+        self.ui.bt_delete_face.clicked.connect(self.delete_face)
         # self.ui.table_people.selectionModel().selectionChanged.connect(self.on_selection_changed)
         # self.ui.table_people.cellClicked.connect(self.cell_was_clicked)
         self.ui.table_people.cellClicked.connect(self.person_table_click)
         self.ui.table_face.cellClicked.connect(self.show_preview_face)
-        self.ui.bt_delete_face.clicked.connect(self.delete_face)
+        
 
         self.config =  FaceRecognitionConfigInstance.__call__().get_config()
         self.ui_config = self.config.ui
         self.database = DatabaseInstance.__call__().get_database()
         self.person_management =  PersonManagement(self.config, self.database)
         self.face_management = FaceManagement(self.config, self.database)
-        # self.face_recognition_app = FaceRecognitionApp()
-        # self.task = self.face_recognition_app.get_task()
+        self.face_recognition_app = FaceRecognitionApp()
+        self.task = self.face_recognition_app.get_task()
         self.frame_queue = DataQueue.__call__().get_frame_queue()
         self.result_queue = ResultQueue.__call__().get_result_queue()
 
-        # self.face = cv2.resize(cv2.imread("images/face.png"), (100,100))
+        self.face = cv2.resize(cv2.imread("cr7.png"), (100,100))
         self.timer.start(0)
         self.viewCam()
         
-        # self.show_face()
-        # self.video_width = 1000
-        # self.video_height = 560
+        self.show_face()
+        self.video_width = 1000
+        self.video_height = 560
         
-        # self.face_recognition_app.run()
+        self.face_recognition_app.run()
 
         self.init()
         self.load_all_people()
         self.init_face_table()
         # self.init_face_table()
 
-    def update_person(self):                                             # <===
+    def update_person(self):
         self.update_person_window = UpDatePersonWindow(self)
-        # self.load_all_people()
 
 
     def person_table_click(self):
@@ -96,8 +98,6 @@ class FaceRecognitionUI:
         except:
             pass
         
-
-        # self.load_all_faces(id)
 
 
     def show_preview_face(self):
@@ -166,9 +166,6 @@ class FaceRecognitionUI:
             self.view_image(image, 491, 321, self.ui.face_preview)
         
 
-    
-
-    
     def load_all_people(self):
         all_people = self.database.get_all_people()
         row=0
@@ -178,12 +175,15 @@ class FaceRecognitionUI:
             self.ui.table_people.setItem(row, 1, QtWidgets.QTableWidgetItem(str(person["id"])))
             row=row+1
         self.init_person_text_box()
-        # self.init_face_text_box()
 
     def delete_face(self):
         person_id = self.ui.tb_add_person_id.text()
+        person_name =  self.ui.tb_add_person_name.text()
         face_id = self.ui.tb_face_id.text()
-        self.face_management.delete_face_by_id(person_id, face_id)
+        message = f"Do you want to delete face ID: {face_id} of {person_name}?"
+        confirm_dlg = ConfirmDialog(self.MainWindow, message)
+        if confirm_dlg.exec():
+            self.face_management.delete_face_by_id(person_id, face_id)
         self.load_all_faces(person_id)
 
     def add_person(self):
@@ -204,15 +204,7 @@ class FaceRecognitionUI:
                 info_dlg.exec()
         self.load_all_people()
     
-    def update_person_by_id(self):
-        update_person = UpDatePerson()
-        update_person.show()
-        # name = self.ui.tb_add_person_name.text()
-        # id = self.ui.tb_add_person_id.text()
-        # res = self.person_management.update_person_name(id, name)
-        # print(res)
-        # self.load_all_people()
-    
+  
     def update_person_by_name(self):
         name = self.ui.tb_add_person_name.text()
         id = self.ui.tb_add_person_id.text()
@@ -251,23 +243,20 @@ class FaceRecognitionUI:
         image = frame_data["image"]
         if self.task["face_recognizer"].is_enable():
             # detection_results = frame_data["detection_results"]
-            l_bbox = frame_data["largest_bbox"][0]
-            person_dict = frame_data["person_dict"]
-            text = ""
-            if (person_dict["id"] != "unknown"):
-                id = person_dict["id"]
-                name = person_dict["name"]
-                text = f"id: {id} Name: {name}"
-                color = (0,255,0)
-            else:
-                text = f"unknow"
-                color = (0,0,255)
-            # print(person_dict)
-            # bboxs = detection_results[0]
-            # for bbox in bboxs:
-            #     cv2.rectangle(image, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])), (255,255,0), 1)
-            cv2.putText(image, text, (int(l_bbox[0])-30, int(l_bbox[1])), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 1, cv2.LINE_AA)
-            cv2.rectangle(image, (int(l_bbox[0]), int(l_bbox[1])), (int(l_bbox[2]), int(l_bbox[3])), color, 1)
+            if len (frame_data["largest_bbox"]) != 0:
+                l_bbox = frame_data["largest_bbox"][0]
+                person_dict = frame_data["person_dict"]
+                text = ""
+                if (person_dict["id"] != "unknown"):
+                    id = person_dict["id"]
+                    name = person_dict["name"]
+                    text = f"Hello {id}"
+                    color = (0,255,0)
+                else:
+                    text = f"unknow"
+                    color = (0,0,255)
+                cv2.putText(image, text, (int(l_bbox[0]), int(l_bbox[1])), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 1, cv2.LINE_AA)
+                cv2.rectangle(image, (int(l_bbox[0]), int(l_bbox[1])), (int(l_bbox[2]), int(l_bbox[3])), color, 1)
         return image
     
     def init(self):

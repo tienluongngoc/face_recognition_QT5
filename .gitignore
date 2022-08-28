@@ -21,3 +21,5 @@ images
 *.pt
 *.onnx
 yolov5-face
+models
+*.png
