@@ -21,8 +21,13 @@ from inferences.face_encode.arcface_trt import ArceFaceTRT
 # cv2.imwrite("test.jpg", img0)
 
 
-config = ArcFaceTRTConfig("configs/models/arcface_trt.yaml")
-arcface = ArceFaceTRT(config)
-img = cv2.imread("cr7.jpg")  # BGR
-arcface.get_feat(img)
+# config = ArcFaceTRTConfig("configs/models/arcface_trt.yaml")
+# arcface = ArceFaceTRT(config)
+# img = cv2.imread("cr7.jpg")  # BGR
+# arcface.get_feat(img)
 
+import numpy as np
+
+A = np.array([1,2,3])
+A = np.append(A, 4)
+print(A)

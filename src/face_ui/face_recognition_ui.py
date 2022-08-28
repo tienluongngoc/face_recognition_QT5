@@ -247,13 +247,15 @@ class FaceRecognitionUI:
                 l_bbox = frame_data["largest_bbox"][0]
                 person_dict = frame_data["person_dict"]
                 text = ""
+                face_id = int(l_bbox[5])
                 if (person_dict["id"] != "unknown"):
                     id = person_dict["id"]
                     name = person_dict["name"]
-                    text = f"Hello {id}"
+                    
+                    text = f"Hello {id}_{face_id}"
                     color = (0,255,0)
                 else:
-                    text = f"unknow"
+                    text = f"unknow_{face_id}"
                     color = (0,0,255)
                 cv2.putText(image, text, (int(l_bbox[0]), int(l_bbox[1])), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 1, cv2.LINE_AA)
                 cv2.rectangle(image, (int(l_bbox[0]), int(l_bbox[1])), (int(l_bbox[2]), int(l_bbox[3])), color, 1)

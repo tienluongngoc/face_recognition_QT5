@@ -13,6 +13,7 @@ from threading import Thread
 import cv2
 # from configs import all_config
 from configs import FaceRecognitionConfigInstance
+from tracker import Sort
 
 
 class FaceRecognition(Thread):
@@ -25,7 +26,7 @@ class FaceRecognition(Thread):
         self.face_detection = FaceDetectionFactory(face_recognition_config).get_engine()
         self.face_encode = FaceEncodeFactory(face_recognition_config).get_engine()
         self.recognizer = FaceRecognitionFactory.__call__(face_recognition_config).get_engine()
-        # self.recognizer.initialize()
+        self.tracker = Sort()
         self.recognize = False
     
     def enable(self):
@@ -39,16 +40,38 @@ class FaceRecognition(Thread):
 
     def encode(self, image: np.ndarray) -> np.ndarray:
         detection_results = self.face_detection.detect(image)
+        bboxes = detection_results[0]
+        kpss = detection_results[1]
+        ids = {}
+        if len(bboxes) != 0:
+            tracks = self.tracker.update(bboxes)
+            for i,bbox in enumerate(bboxes):
+                for j,track in enumerate(tracks):
+                    bb1 = [bbox[0], bbox[1], bbox[2], bbox[3]]
+                    bb2 = [track[0], track[1],track[2],track[3]]
+                    iou_result = self.iou(bb1, bb2)
+                    if iou_result > 0.9:
+                        ids[f"{i}"] = track[4]
+        new_bboxes = []
+        for i,bbox in enumerate(bboxes):
+            if str(i) in ids.keys():
+                new_bbox = [bbox[0],bbox[1],bbox[2],bbox[3],bbox[4],int(ids[f"{i}"])]
+            else:
+                new_bbox = [bbox[0],bbox[1],bbox[2],bbox[3],bbox[4],-1]
+            new_bboxes.append(new_bbox)
+        detection_results = (np.array(new_bboxes), kpss)
+
+
         if detection_results[0].shape[0] == 0 or detection_results[1].shape[0] == 0:
             return np.array([]), np.array([]), np.array([])
-        argest_bbox = self.get_largest_bbox(detection_results)
+        largest_bbox = self.get_largest_bbox(detection_results)
         face = Face(
-			bbox=argest_bbox[0][:4], 
-			kps=argest_bbox[1][0], 
-			det_score=argest_bbox[0][-1]
+			bbox=largest_bbox[0][:4], 
+			kps=largest_bbox[1][0], 
+			det_score=largest_bbox[0][-1]
 		)
         encode_results = self.face_encode.get(image, face)
-        return detection_results,argest_bbox,encode_results
+        return detection_results,largest_bbox,encode_results
     
     def check_face_liveness(self, image):
         live = True
@@ -93,3 +116,18 @@ class FaceRecognition(Thread):
             
             result["image"] = image
             self.result_queue.put(result)
+
+    def iou(self, bb_test,bb_gt):
+        """
+        Computes IUO between two bboxes in the form [x1,y1,x2,y2]
+        """
+        xx1 = np.maximum(bb_test[0], bb_gt[0])
+        yy1 = np.maximum(bb_test[1], bb_gt[1])
+        xx2 = np.minimum(bb_test[2], bb_gt[2])
+        yy2 = np.minimum(bb_test[3], bb_gt[3])
+        w = np.maximum(0., xx2 - xx1)
+        h = np.maximum(0., yy2 - yy1)
+        wh = w * h
+        o = wh / ((bb_test[2]-bb_test[0])*(bb_test[3]-bb_test[1])
+        + (bb_gt[2]-bb_gt[0])*(bb_gt[3]-bb_gt[1]) - wh)
+        return(o)

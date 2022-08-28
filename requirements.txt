@@ -19,3 +19,7 @@ scikit-image
 PyQt5
 faiss-gpu
 grpcio
+# conda install pytorch torchvision torchaudio cudatoolkit=11.6 -c pytorch -c conda-forge
+# conda install -c conda-forge pycuda
+numba
+filterpy

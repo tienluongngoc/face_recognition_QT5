@@ -41,10 +41,14 @@ sys.path.append("./src")
 
 from configs.arcface_trt_config import ArcFaceTRTConfig
 from inferences.face_encode.arcface_trt import ArceFaceTRT
-# from configs.yolov5_config import Yolov5Config
-# from inferences.face_detection.yolov5 import YOLOV5
+import cv2
+from configs.yolov5_config import Yolov5Config
+from inferences.face_detection.yolov5 import YOLOV5
 
-config = ArcFaceTRTConfig("configs/models/arcface_trt.yaml")
-arcface = ArceFaceTRT(config)
-# config = Yolov5Config("configs/models/yolov5.yaml")
-# yolo5 = YOLOV5(config)
+# config = ArcFaceTRTConfig("configs/models/arcface_trt.yaml")
+# arcface = ArceFaceTRT(config)
+img = cv2.imread("cr7.png")
+config = Yolov5Config("configs/models/yolov5.yaml")
+yolo5 = YOLOV5(config)
+
+yolo5.detect(img)

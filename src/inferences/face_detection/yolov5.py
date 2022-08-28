@@ -29,13 +29,14 @@ class YOLOV5(TRTModel):
         img = img.transpose((2, 0, 1))[::-1]  # HWC to CHW, BGR to RGB
         img = np.ascontiguousarray(img)
 
-        im = torch.from_numpy(img)
-        # fp16 = False
-        # im = im.half() if fp16 else im.float()  # uint8 to fp16/32
+        im = torch.from_numpy(img).to("cuda")
+        fp16 = False
+        im = im.half() if fp16 else im.float()  # uint8 to fp16/32
         im /= 255  # 0 - 255 to 0.0 - 1.0
         if len(im.shape) == 3:
             im = im[None]  # expand for batch dim
         return im, img0
+
 
     def nms(self, prediction):
         nc = prediction.shape[2] - 15  # number of classes
