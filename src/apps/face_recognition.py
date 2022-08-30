@@ -28,6 +28,7 @@ class FaceRecognition(Thread):
         self.recognizer = FaceRecognitionFactory.__call__(face_recognition_config).get_engine()
         self.tracker = Sort()
         self.recognize = False
+        self.tracked_face = {}
     
     def enable(self):
         self.recognize = True
@@ -43,8 +44,10 @@ class FaceRecognition(Thread):
         bboxes = detection_results[0]
         kpss = detection_results[1]
         ids = {}
+        print("------------------------")
         if len(bboxes) != 0:
             tracks = self.tracker.update(bboxes)
+            print(tracks)
             for i,bbox in enumerate(bboxes):
                 for j,track in enumerate(tracks):
                     bb1 = [bbox[0], bbox[1], bbox[2], bbox[3]]
@@ -53,6 +56,8 @@ class FaceRecognition(Thread):
                     if iou_result > 0.9:
                         ids[f"{i}"] = track[4]
         new_bboxes = []
+        print(ids)
+        print(bboxes)
         for i,bbox in enumerate(bboxes):
             if str(i) in ids.keys():
                 new_bbox = [bbox[0],bbox[1],bbox[2],bbox[3],bbox[4],int(ids[f"{i}"])]
@@ -63,15 +68,22 @@ class FaceRecognition(Thread):
 
 
         if detection_results[0].shape[0] == 0 or detection_results[1].shape[0] == 0:
-            return np.array([]), np.array([]), np.array([])
-        largest_bbox = self.get_largest_bbox(detection_results)
-        face = Face(
-			bbox=largest_bbox[0][:4], 
-			kps=largest_bbox[1][0], 
-			det_score=largest_bbox[0][-1]
-		)
-        encode_results = self.face_encode.get(image, face)
-        return detection_results,largest_bbox,encode_results
+            return np.array([]), np.array([])
+        inference_on_largest_bbox = False
+        encode_results = []
+        if inference_on_largest_bbox:
+            largest_bbox = self.get_largest_bbox(detection_results)
+            face = Face(bbox=largest_bbox[0][:4], kps=largest_bbox[1][0],det_score=largest_bbox[0][-1])
+            encode_result = self.face_encode.get(image, face)
+            encode_results.append(encode_result)
+            return largest_bbox,encode_results
+        else:
+            for detection_result in detection_results[0]:
+                face = Face(bbox=detection_result[:4], kps=detection_results[1][0],det_score=detection_result[-2])
+                encode_result = self.face_encode.get(image, face)
+                encode_results.append(encode_result)
+            return detection_results, encode_results
+        
     
     def check_face_liveness(self, image):
         live = True
@@ -92,30 +104,36 @@ class FaceRecognition(Thread):
             if self.recognize:
                 if image is None:
                     raise
-                detection_results,largest_bbox,embed_vector = self.encode(image)
+                detection_results,embed_vectors = self.encode(image)
                 result["detection_results"] = detection_results
-                result["largest_bbox"] = largest_bbox
-                if embed_vector.size != 0:
-                    state = ""
-                    face_live = self.check_face_liveness(image)
-                    if face_live is not None:
-                        if face_live:
-                            state = "real"
-                        else:
-                            state = "fake"
-                    person_info = self.recognizer.search(embed_vector)
+                person_dicts = []
+                for embed_vector in embed_vectors:
+                    if embed_vector.size != 0:
+                        state = ""
+                        face_live = self.check_face_liveness(image)
+                        if face_live is not None:
+                            if face_live:
+                                state = "real"
+                            else:
+                                state = "fake"
+                        person_info = self.recognizer.search(embed_vector)
 
-                    # #TODO check
-                    if person_info["person_id"] != "unrecognize":
-                        person_doc = PersonDoc(id=person_info["person_id"], name=person_info["person_name"])
-                        person_dict = person_doc.dict()
-                        person_dict["state"] = state
-                    else:
-                        person_dict = {"id": "unknown"}
-                    result["person_dict"] = person_dict
+                        # #TODO check
+                        if person_info["person_id"] != "unrecognize":
+                            person_doc = PersonDoc(id=person_info["person_id"], name=person_info["person_name"])
+                            person_dict = person_doc.dict()
+                            person_dict["state"] = state
+                        else:
+                            person_dict = {"id": "unknown"}
+                        person_dicts.append(person_dict)
+                result["person_dict"] = person_dicts
             
             result["image"] = image
             self.result_queue.put(result)
+
+    def search(self, embed_vector, result):
+        pass
+
 
     def iou(self, bb_test,bb_gt):
         """
