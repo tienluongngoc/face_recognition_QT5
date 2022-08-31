@@ -1,4 +1,5 @@
 from os import pread
+from unittest import skip
 from .face_recognition_factory import FaceRecognitionFactory
 from inferences import face_detection, face_encode
 # from inferences import YOLOV5, SCRFD, ArcFace
@@ -14,7 +15,7 @@ import cv2
 # from configs import all_config
 from configs import FaceRecognitionConfigInstance
 from tracker import Sort
-
+import time
 
 class FaceRecognition(Thread):
     def __init__(self) -> None:
@@ -44,10 +45,10 @@ class FaceRecognition(Thread):
         bboxes = detection_results[0]
         kpss = detection_results[1]
         ids = {}
-        print("------------------------")
+        # print("------------------------")
         if len(bboxes) != 0:
             tracks = self.tracker.update(bboxes)
-            print(tracks)
+            # print(tracks)
             for i,bbox in enumerate(bboxes):
                 for j,track in enumerate(tracks):
                     bb1 = [bbox[0], bbox[1], bbox[2], bbox[3]]
@@ -56,14 +57,19 @@ class FaceRecognition(Thread):
                     if iou_result > 0.9:
                         ids[f"{i}"] = track[4]
         new_bboxes = []
-        print(ids)
-        print(bboxes)
+        for key in ids.keys():
+            if ids[key] not in self.tracked_face:
+                self.tracked_face[int(ids[key])] = {"id": [], "skiped": 0, "time": time.time()}
+        print(self.tracked_face)
+
+        # print(ids)
+        # print(bboxes)
         for i,bbox in enumerate(bboxes):
             if str(i) in ids.keys():
                 new_bbox = [bbox[0],bbox[1],bbox[2],bbox[3],bbox[4],int(ids[f"{i}"])]
-            else:
-                new_bbox = [bbox[0],bbox[1],bbox[2],bbox[3],bbox[4],-1]
-            new_bboxes.append(new_bbox)
+            # else:
+            #     new_bbox = [bbox[0],bbox[1],bbox[2],bbox[3],bbox[4],-1]
+                new_bboxes.append(new_bbox)
         detection_results = (np.array(new_bboxes), kpss)
 
 
@@ -79,9 +85,23 @@ class FaceRecognition(Thread):
             return largest_bbox,encode_results
         else:
             for detection_result in detection_results[0]:
-                face = Face(bbox=detection_result[:4], kps=detection_results[1][0],det_score=detection_result[-2])
-                encode_result = self.face_encode.get(image, face)
-                encode_results.append(encode_result)
+                # if (int(detection_result[5]) not in self.tracked_face.keys):
+                face_id = int(detection_result[5])
+                if face_id in self.tracked_face.keys():
+                    skiped = self.tracked_face[face_id]["skiped"]
+                    if skiped > 5 or skiped == 0:
+                        # print("oke")
+                        print(detection_result[:4])
+                        face = Face(bbox=detection_result[:4], kps=detection_results[1][0],det_score=detection_result[-2])
+                        encode_result = self.face_encode.get(image, face)
+                        print(encode_result[:10])
+                        encode_results.append(encode_result)
+                        self.tracked_face[face_id]["skiped"] = 1
+                    else:
+                        self.tracked_face[face_id]["skiped"] = self.tracked_face[face_id]["skiped"] + 1
+                # else:
+                #     pass
+
             return detection_results, encode_results
         
     
@@ -96,9 +116,28 @@ class FaceRecognition(Thread):
         kps_corr = kpss[np.where((bboxes==largest_bbox).all(axis=1))]
         detection_largest = [largest_bbox, kps_corr]
         return detection_largest
+
+    def clean_cache(self):
+        del_id_list = []
+        for key in self.tracked_face.keys():
+            # remove last 20 frame, keep cache 20
+            if len(self.tracked_face[key]["id"]) > 5:
+                self.tracked_face[key]["id"].pop(0)
+
+            # remove face id if 3s was not update, keep 3s
+            if (time.time() - self.tracked_face[key]["time"]) > 3:
+                del_id_list.append(key)
+        for id in del_id_list:
+            del self.tracked_face[id]
+        # print(del_id_list)
+
+    def most_frequent(self, List):
+        return max(set(List), key = List.count)
+
     
     def run(self):
         while True:
+            self.clean_cache()
             image =  self.frame_queue.get()["image"]
             result = {}
             if self.recognize:
@@ -107,7 +146,7 @@ class FaceRecognition(Thread):
                 detection_results,embed_vectors = self.encode(image)
                 result["detection_results"] = detection_results
                 person_dicts = []
-                for embed_vector in embed_vectors:
+                for i,embed_vector in enumerate(embed_vectors):
                     if embed_vector.size != 0:
                         state = ""
                         face_live = self.check_face_liveness(image)
@@ -116,18 +155,37 @@ class FaceRecognition(Thread):
                                 state = "real"
                             else:
                                 state = "fake"
+                        # print("search")
                         person_info = self.recognizer.search(embed_vector)
+                        # print(person_info)
 
                         # #TODO check
                         if person_info["person_id"] != "unrecognize":
                             person_doc = PersonDoc(id=person_info["person_id"], name=person_info["person_name"])
                             person_dict = person_doc.dict()
                             person_dict["state"] = state
+                            #TODO check liveness
                         else:
                             person_dict = {"id": "unknown"}
-                        person_dicts.append(person_dict)
+                        # print(person_dict)
+                        # person_dicts.append(person_dict)
+                        face_id = detection_results[0][i][5]
+                        self.tracked_face[int(face_id)]["id"].append(person_dict["id"])
+                        self.tracked_face[int(face_id)]["time"] = time.time()
+                # result["person_dict"] = person_dicts
+                # print(detection_results)
+                if len(detection_results) != 0:
+                    bboxes = detection_results[0]
+                    for bbox in bboxes:
+                        face_id = int(bbox[5])
+                        if face_id in self.tracked_face.keys():
+                            id_list = self.tracked_face[face_id]["id"]
+                            # print(id_list)
+                            id = self.most_frequent(id_list)
+                            person_dicts.append({"id": id})
+
+                # print(bboxes)
                 result["person_dict"] = person_dicts
-            
             result["image"] = image
             self.result_queue.put(result)
 

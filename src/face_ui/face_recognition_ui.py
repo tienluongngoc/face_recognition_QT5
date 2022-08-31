@@ -247,6 +247,7 @@ class FaceRecognitionUI:
             if len(detection_results) != 0:
                 bboxes, kpss = detection_results
                 person_dicts = frame_data["person_dict"]
+                # print(person_dicts)
                 for i,bbox in enumerate(bboxes):
                     person_dict = person_dicts[i]
                     face_id = int(bbox[5])
