@@ -122,7 +122,7 @@ class FaceRecognitionUI:
             self.ui_main_windown.tb_path.setText(img_path)
             self.ui_main_windown.tb_face_id.setText(id)
         except:
-            image = cv2.imread("libs/avata.jpg")
+            image = cv2.imread("libs/avata.png")
             self.view_image(image, 491, 321, self.ui_main_windown.face_preview)
 
 
@@ -169,7 +169,7 @@ class FaceRecognitionUI:
             self.ui_main_windown.table_people.setItem(row, 0, QtWidgets.QTableWidgetItem(person["name"]))
             self.ui_main_windown.table_people.setItem(row, 1, QtWidgets.QTableWidgetItem(str(person["id"])))
             row=row+1
-        self.init_person_text_box() # Load the first row at this table into textbox
+        # self.init_person_text_box() # Load the first row at this table into textbox
 
 
 

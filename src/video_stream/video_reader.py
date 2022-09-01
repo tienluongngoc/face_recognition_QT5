@@ -1,4 +1,3 @@
-from os import pread
 import queue
 import time
 import threading

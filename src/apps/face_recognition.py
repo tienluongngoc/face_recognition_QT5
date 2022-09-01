@@ -1,4 +1,3 @@
-from os import pread
 from unittest import skip
 from .face_recognition_factory import FaceRecognitionFactory
 from inferences import face_detection, face_encode
