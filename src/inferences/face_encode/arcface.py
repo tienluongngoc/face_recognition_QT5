@@ -39,6 +39,8 @@ class ArcFace(metaclass=Singleton):
 	
 	def get(self, img: np.ndarray, face: face_detect.Face):
 		aimg = face_align.norm_crop(img, landmark=face.kps)
+		# import cv2
+		# cv2.imwrite("test.jpg", aimg)
 		face.embedding = self.get_feat(aimg).flatten()
 		return face.normed_embedding
 	

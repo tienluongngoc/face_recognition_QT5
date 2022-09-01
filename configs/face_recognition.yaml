@@ -33,7 +33,7 @@ models:
       scrfd: configs/models/scrfd.yaml
       yolov5: configs/models/yolov5.yaml
   encode:
-    engine: arcface
+    engine: arcface_trt
     engine_config:
       dummy: null
       arcface: configs/models/arcface.yaml
