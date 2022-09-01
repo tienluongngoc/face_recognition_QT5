@@ -47,6 +47,7 @@ from inferences.face_detection.yolov5 import YOLOV5
 
 # config = ArcFaceTRTConfig("configs/models/arcface_trt.yaml")
 # arcface = ArceFaceTRT(config)
+
 img = cv2.imread("cr7.png")
 config = Yolov5Config("configs/models/yolov5.yaml")
 yolo5 = YOLOV5(config)

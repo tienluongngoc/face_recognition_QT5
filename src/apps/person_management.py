@@ -77,8 +77,9 @@ class PersonManagement:
 		if not self.verify.check_person_by_id(person_id):
 			return Validation.PERSON_ID_NOT_FOUND 
 		person = self.select_person_by_id(person_id)
-		for face in person["faces"]:
-			face["imgPath"] = face["imgPath"].replace(person_id, new_id)
+		if person["faces"] is not None:
+			for face in person["faces"]:
+				face["imgPath"] = face["imgPath"].replace(person_id, new_id)
 		self.db_instance.personColl.update_one(
 			{"id": person_id},
 			{"$set": {"id": new_id}})

@@ -1,11 +1,11 @@
 api:
-  server_host: "192.168.2.198"
+  server_host: "192.168.1.24"
   server_port: 9950
   log_level: "info"
   log_config: "configs/log_config.ini"
 
 mongodb:
-  hostname: "192.168.2.198"
+  hostname: "192.168.1.24"
   port: 27017
   user: tienln 
   password: tienln
@@ -21,19 +21,19 @@ faces:
   end: ".png"
 
 model_server:
-  host: "192.168.2.198"
+  host: "192.168.1.24"
   port: 7501
   running: false
 
 models:
   detection:
-    engine: yolov5
+    engine: scrfd
     engine_config:
       dummy: null
       scrfd: configs/models/scrfd.yaml
       yolov5: configs/models/yolov5.yaml
   encode:
-    engine: arcface_trt
+    engine: arcface
     engine_config:
       dummy: null
       arcface: configs/models/arcface.yaml

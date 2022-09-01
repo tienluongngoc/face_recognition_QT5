@@ -85,7 +85,7 @@
                </size>
               </property>
               <property name="text">
-               <string>TextLabel</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -97,21 +97,21 @@
               <item>
                <widget class="QLabel" name="name_1">
                 <property name="text">
-                 <string>Name: Tien Luong Ngoc</string>
+                 <string/>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="QLabel" name="id_1">
                 <property name="text">
-                 <string>ID: tienln</string>
+                 <string/>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="QLabel" name="time_1">
                 <property name="text">
-                 <string>Time: 07:30:45</string>
+                 <string/>
                 </property>
                </widget>
               </item>
@@ -130,7 +130,7 @@
                </size>
               </property>
               <property name="text">
-               <string>TextLabel</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -142,21 +142,21 @@
               <item>
                <widget class="QLabel" name="name_2">
                 <property name="text">
-                 <string>Name: Tien Luong Ngoc</string>
+                 <string/>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="QLabel" name="id_2">
                 <property name="text">
-                 <string>ID: tienln</string>
+                 <string/>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="QLabel" name="time_2">
                 <property name="text">
-                 <string>Time: 07:30:45</string>
+                 <string/>
                 </property>
                </widget>
               </item>
@@ -175,7 +175,7 @@
                </size>
               </property>
               <property name="text">
-               <string>TextLabel</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -187,21 +187,21 @@
               <item>
                <widget class="QLabel" name="name_3">
                 <property name="text">
-                 <string>Name: Tien Luong Ngoc</string>
+                 <string/>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="QLabel" name="id_3">
                 <property name="text">
-                 <string>ID: tienln</string>
+                 <string/>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="QLabel" name="time_3">
                 <property name="text">
-                 <string>Time: 07:30:45</string>
+                 <string/>
                 </property>
                </widget>
               </item>
@@ -223,7 +223,7 @@
                </size>
               </property>
               <property name="text">
-               <string>TextLabel</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -235,21 +235,21 @@
               <item>
                <widget class="QLabel" name="name_4">
                 <property name="text">
-                 <string>Name: Tien Luong Ngoc</string>
+                 <string/>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="QLabel" name="id_4">
                 <property name="text">
-                 <string>ID: tienln</string>
+                 <string/>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="QLabel" name="time_4">
                 <property name="text">
-                 <string>Time: 07:30:45</string>
+                 <string/>
                 </property>
                </widget>
               </item>
@@ -268,7 +268,7 @@
                </size>
               </property>
               <property name="text">
-               <string>TextLabel</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -280,21 +280,21 @@
               <item>
                <widget class="QLabel" name="name_5">
                 <property name="text">
-                 <string>Name: Tien Luong Ngoc</string>
+                 <string/>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="QLabel" name="id_5">
                 <property name="text">
-                 <string>ID: tienln</string>
+                 <string/>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="QLabel" name="time_5">
                 <property name="text">
-                 <string>Time: 07:30:45</string>
+                 <string/>
                 </property>
                </widget>
               </item>
@@ -314,7 +314,7 @@
           </rect>
          </property>
          <property name="text">
-          <string>PushButton</string>
+          <string>Start</string>
          </property>
         </widget>
        </widget>

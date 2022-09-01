@@ -12,8 +12,8 @@ class UpDatePersonWindow:
         self.update_person_ui.setupUi(self.this_window)
         self.update_person_ui.bt_update.clicked.connect(self.update_person_info)
         
-        self.current_name = self.main_window.ui.tb_add_person_name.text()
-        self.current_id = self.main_window.ui.tb_add_person_id.text()
+        self.current_name = self.main_window.ui_main_windown.tb_add_person_name.text()
+        self.current_id = self.main_window.ui_main_windown.tb_add_person_id.text()
         self.update_person_ui.tb_current_id.setText(self.current_id)
         self.update_person_ui.tb_current_name.setText(self.current_name)
         self.update_person_ui.tb_new_id.setText(self.current_id)

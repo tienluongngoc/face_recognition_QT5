@@ -14,10 +14,10 @@ class VideoReader(Subject, Thread):
     def __init__(self, config, frame_queue: Queue):
         Thread.__init__(self)
         super(VideoReader, self).__init__()
-        # self.camera_url = "images/cr7.mp4"
+        # self.camera_url = "images/face_detection.mp4"
         # self.camera_url = "rtsp://admin:ATDJTN@192.168.1.99:554/H.264"
         self.camera_url = 0
-        self.sleep_time = 0 #config[""]
+        self.sleep_time = 0#config[""]
         # self.camera_id = config["camera_id"]
         # self.location = config["location"]
         # self.service_name = config["service_name"]
@@ -39,6 +39,11 @@ class VideoReader(Subject, Thread):
             if not self.pause:
                 try:
                     grabbed, self.frame = self.cap.read()
+                    # print("frame queue size: ", self.frame_queue.qsize())
+                    self.frame_count += 1
+                    if self.frame_count < 3:
+                        continue
+                    self.frame_count = 0
                     # print(self.frame.shape)
                     if grabbed == True:
                         time.sleep(self.sleep_time)
@@ -50,7 +55,7 @@ class VideoReader(Subject, Thread):
                                     }
                         self.frame_queue.put(frame_data)
                         self.notify()
-                        # print("frame queue size: ", self.frame_queue.qsize())
+                        
                     if self.frame_queue.qsize() >= 90:
                         self.frame_queue.get()
                     self.new_frame_time = time.time()
