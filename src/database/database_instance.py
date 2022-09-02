@@ -1,6 +1,6 @@
 # from ..utils.utils import Singleton
 from .PersonDB import PersonDatabase
-from configs import FaceRecognitionConfigInstance
+from src.configs.config_instance import FaceRecognitionConfigInstance
 
 class Singleton(type):
     _instances = {}

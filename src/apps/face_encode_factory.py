@@ -1,5 +1,5 @@
-from inferences import ArcFace
-from configs.face_recognition_config import FaceRecogAPIConfig
+from src.inferences.face_encode.arcface import ArcFace
+from src.configs.face_recognition_config import FaceRecogAPIConfig
 
 
 class FaceEncodeFactory:

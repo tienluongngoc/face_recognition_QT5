@@ -1,4 +1,4 @@
-from database import PersonDatabase
+from src.database.PersonDB import PersonDatabase
 
 class PersonVerify:
 	def __init__(self, db_instance: PersonDatabase):

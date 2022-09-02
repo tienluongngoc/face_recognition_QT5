@@ -8,17 +8,17 @@ import time
 import cv2
 
 
-from database import DatabaseInstance
-from configs.config_instance import FaceRecognitionConfigInstance
-from apps.face_recognition_app import FaceRecognitionApp
-from apps.person_management import PersonManagement
-from apps.data_queue import DataQueue, ResultQueue
-from video_stream.video_reader import VideoReader
+from src.database.database_instance import DatabaseInstance
+from src.configs.config_instance import FaceRecognitionConfigInstance
+from src.apps.face_recognition_app import FaceRecognitionApp
+from src.apps.person_management import PersonManagement
+from src.apps.data_queue import DataQueue, ResultQueue
+from src.video_stream.video_reader import VideoReader
 from .ui_utils import ConfirmDialog, InfoDialog
-from apps.face_management import FaceManagement
+from src.apps.face_management import FaceManagement
 from .update_person import UpDatePersonWindow
-from schemas.validation import Validation
-from face_ui.face_ui import Ui_MainWindow
+from src.schemas.validation import Validation
+from src.face_ui.face_ui import Ui_MainWindow
 
 class FaceRecognitionUI:
     def __init__(self) -> None:

@@ -22,6 +22,5 @@ images
 *.onnx
 yolov5-face
 models
-*.png
 *.mp4
 .vscode

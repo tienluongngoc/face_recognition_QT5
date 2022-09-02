@@ -1,4 +1,4 @@
-from inferences import Singleton
+from src.inferences.base import Singleton
 from queue import Queue
 
 class DataQueue(metaclass=Singleton):

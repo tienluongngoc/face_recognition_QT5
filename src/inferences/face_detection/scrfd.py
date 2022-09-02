@@ -4,7 +4,7 @@ import cv2
 from ..utils.face_detect import nms, distance2bbox, distance2kps, custom_resize
 from datetime import datetime
 from ..base import Singleton
-from configs import SCRFDConfig
+from src.configs.scrfd_config import SCRFDConfig
 from uvicorn.config import logger
 
 class SCRFD(metaclass=Singleton):

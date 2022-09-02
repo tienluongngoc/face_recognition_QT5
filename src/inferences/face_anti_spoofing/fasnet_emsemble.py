@@ -1,5 +1,5 @@
 from .fasnet import MiniFASNet
-from configs import FASNetConfig
+from src.configs.fasnet_config import FASNetConfig
 from typing import List
 import numpy as np
 from ..base import Singleton

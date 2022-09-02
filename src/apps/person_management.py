@@ -1,16 +1,16 @@
 from pathlib import Path
 import shutil
 from fastapi import status, HTTPException
-from src.database import PersonDatabase
-from validation import PersonVerify
-from schemas import SimplePerson
-from models import PersonDoc
-from inferences import ChangeEvent
+from src.database.PersonDB import PersonDatabase
+from src.validation.checkdb import PersonVerify
+from src.schemas.person import SimplePerson
+from src.models.person import PersonDoc
+from src.inferences.face_recognition.faiss_wrap import ChangeEvent
 import os
 from urllib.parse import unquote
-from schemas import Validation
-from apps.face_recognition_factory import FaceRecognitionFactory
-from configs.config_instance import FaceRecognitionConfigInstance
+from src.schemas.validation import Validation
+from src.apps.face_recognition_factory import FaceRecognitionFactory
+from src.configs.config_instance import FaceRecognitionConfigInstance
 
 class PersonManagement:
 	def __init__(self, face_config, db_instance: PersonDatabase) -> None:

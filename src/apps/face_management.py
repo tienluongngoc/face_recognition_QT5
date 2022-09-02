@@ -1,23 +1,23 @@
 from distutils.command.config import config
-from database import PersonDatabase
-from models.person import PersonDoc
-from validation import PersonVerify
+from src.database.PersonDB import PersonDatabase
+from src.models.person import PersonDoc
+from src.validation.checkdb import PersonVerify
 import os
 import shutil
 import numpy as np
 from fastapi import HTTPException, status
-from schemas import ImageValidation,Validation
-from models import EmbeddingVectorDoc, FaceDoc
+from src.schemas.validation import ImageValidation,Validation
+from src.models.person import EmbeddingVectorDoc, FaceDoc
 from fastapi.responses import JSONResponse
 import uuid
-from validation import FaceValidation
+from src.validation.face_validation import FaceValidation
 from pathlib import Path
 import cv2
-from utils.utils import npfloat2float
-from inferences import ChangeEvent, face_encode
+from src.utils.utils import npfloat2float
+from src.inferences.face_recognition.faiss_wrap import ChangeEvent
 from urllib.parse import unquote
-from apps.face_recognition_factory import FaceRecognitionFactory
-from configs.config_instance import FaceRecognitionConfigInstance
+from src.apps.face_recognition_factory import FaceRecognitionFactory
+from src.configs.config_instance import FaceRecognitionConfigInstance
 from .face_recognition import FaceRecognition
 
 

@@ -1,7 +1,7 @@
 from __future__ import division
 import numpy as np
 from datetime import datetime
-from configs import FASNetConfig
+from src.configs.fasnet_config import FASNetConfig
 from ..utils.face_anti import CropImage, softmax
 from uvicorn.config import logger
 

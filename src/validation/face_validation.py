@@ -1,10 +1,10 @@
 from typing import List
-from schemas.validation import ImageValidation
-from models import PersonDoc
+from src.schemas.validation import ImageValidation
+from src.models.person import PersonDoc
 import cv2
 import numpy as np
 # from inferences import face_detection, face_encode
-from inferences.utils.face_detect import Face
+from src.inferences.utils.face_detect import Face
 import os, glob
 
 class FaceValidation:

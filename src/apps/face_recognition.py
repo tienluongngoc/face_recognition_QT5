@@ -1,19 +1,18 @@
 from unittest import skip
 from .face_recognition_factory import FaceRecognitionFactory
-from inferences import face_detection, face_encode
+from src.inferences import face_detection, face_encode
 # from inferences import YOLOV5, SCRFD, ArcFace
 from .face_detection_factory import FaceDetectionFactory
 from .face_encode_factory import FaceEncodeFactory
-from inferences.utils.face_detect import Face
-from models.person import PersonDoc
+from src.inferences.utils.face_detect import Face
+from src.models.person import PersonDoc
 from .data_queue import DataQueue, ResultQueue
 import numpy as np
 from typing import List
 from threading import Thread
 import cv2
-# from configs import all_config
-from configs import FaceRecognitionConfigInstance
-from tracker import Sort
+from src.configs.config_instance import FaceRecognitionConfigInstance
+from src.tracker.sort import Sort
 import time
 
 class FaceRecognition(Thread):

@@ -4,7 +4,7 @@ import cv2
 from ..utils import face_align, face_detect
 from datetime import datetime
 from ..base import Singleton
-from configs import ArcFaceConfig
+from src.configs.arcface_config import ArcFaceConfig
 from uvicorn.config import logger
 
 class ArcFace(metaclass=Singleton):

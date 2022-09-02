@@ -1,9 +1,9 @@
 from distutils.command.config import config
 from turtle import ontimer
-from inferences import SCRFD
-from configs.yolov5_config import Yolov5Config
-from configs.scrfd_config import SCRFDConfig
-from configs.face_recognition_config import FaceRecogAPIConfig
+from src.inferences.face_detection.scrfd import SCRFD
+from src.configs.yolov5_config import Yolov5Config
+from src.configs.scrfd_config import SCRFDConfig
+from src.configs.face_recognition_config import FaceRecogAPIConfig
 
 
 class FaceDetectionFactory:

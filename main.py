@@ -1,6 +1,6 @@
 import sys
-sys.path.append("./src")
-from face_ui import FaceRecognitionUI
+# sys.path.append("./src")
+from src.face_ui.face_recognition_ui import FaceRecognitionUI
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 if __name__ == "__main__":

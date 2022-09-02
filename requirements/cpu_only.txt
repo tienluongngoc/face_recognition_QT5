@@ -11,7 +11,7 @@ uvicorn
 aiofiles
 python-multipart
 tritonclient
-opencv-python-headless
+# opencv-python
 requests
 scikit-image
 PyQt5
@@ -19,3 +19,4 @@ faiss-cpu
 grpcio
 numba
 filterpy
+tornado

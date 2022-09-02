@@ -1,7 +1,7 @@
-from inferences import FAISS
-from configs.face_recognition_config import FaceRecogAPIConfig
-from database.database_instance import DatabaseInstance
-from utils.utils import Singleton
+from src.inferences.face_recognition.faiss_wrap import FAISS
+from src.configs.face_recognition_config import FaceRecogAPIConfig
+from src.database.database_instance import DatabaseInstance
+from src.utils.utils import Singleton
 
 class FaceRecognitionFactory(metaclass=Singleton):
     def __init__(self, config:FaceRecogAPIConfig) -> None:

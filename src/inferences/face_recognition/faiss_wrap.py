@@ -1,11 +1,11 @@
 import faiss
 import numpy as np
-from database import PersonDatabase
+from src.database.PersonDB import PersonDatabase
 import threading, queue, time, enum
 from datetime import datetime
 import os
 from ..base import Singleton
-from configs import FaissConfig
+from src.configs.faiss_config import FaissConfig
 from uvicorn.config import logger
 
 class ChangeEvent(enum.Enum):

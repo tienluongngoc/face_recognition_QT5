@@ -2,7 +2,7 @@ from email import message
 from .ui_update_person import QtWidgets, Ui_window_update_person
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QVBoxLayout, QWidget
 from .ui_utils import ConfirmDialog, InfoDialog
-from schemas.validation import Validation
+from src.schemas.validation import Validation
 
 class UpDatePersonWindow:
     def __init__(self, main_window) -> None:
