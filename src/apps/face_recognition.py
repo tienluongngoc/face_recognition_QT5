@@ -28,6 +28,10 @@ class FaceRecognition(Thread):
         self.tracker = Sort()
         self.recognize = False
         self.tracked_face = {}
+        self.is_stop = False
+
+    def stop_thread(self):
+        self.is_stop = True
     
     def enable(self):
         self.recognize = True
@@ -121,59 +125,60 @@ class FaceRecognition(Thread):
 
     
     def run(self):
-        while True:
+        while not self.is_stop:
             self.clean_cache()
-            image =  self.frame_queue.get()["image"]
-            result = {}
-            if self.recognize:
-                # print("--------------------------------------------------------------------------------------------------------------------------------------")
-                if image is None:
-                    raise
-                detection_results,embed_vectors = self.encode(image)
-                result["detection_results"] = detection_results
-                person_dicts = []
-                for key in embed_vectors.keys():
-                    embed_vector = embed_vectors[key]
-                    if embed_vector.size != 0:
-                        state = ""
-                        face_live = self.check_face_liveness(image)
-                        if face_live is not None:
-                            if face_live:
-                                state = "real"
-                            else:
-                                state = "fake"
-                        person_info = self.recognizer.search(embed_vector)
+            if self.frame_queue.qsize():
+                image =  self.frame_queue.get()["image"]
+                result = {}
+                if self.recognize:
+                    # print("--------------------------------------------------------------------------------------------------------------------------------------")
+                    if image is None:
+                        raise
+                    detection_results,embed_vectors = self.encode(image)
+                    result["detection_results"] = detection_results
+                    person_dicts = []
+                    for key in embed_vectors.keys():
+                        embed_vector = embed_vectors[key]
+                        if embed_vector.size != 0:
+                            state = ""
+                            face_live = self.check_face_liveness(image)
+                            if face_live is not None:
+                                if face_live:
+                                    state = "real"
+                                else:
+                                    state = "fake"
+                            person_info = self.recognizer.search(embed_vector)
 
-                        # #TODO check
-                        if person_info["person_id"] != "unrecognize":
-                            person_doc = PersonDoc(id=person_info["person_id"], name=person_info["person_name"])
-                            person_dict = person_doc.dict()
-                            person_dict["state"] = state
-                            #TODO check liveness
-                        else:
-                            person_dict = {"id": "unknown", "name": "unknown"}
-                        self.tracked_face[key]["id"].append(person_dict["id"])
-                        self.tracked_face[key]["name"].append(person_dict["name"])
-                        self.tracked_face[key]["time"] = time.time()
-                if len(detection_results) != 0:
-                    bboxes = detection_results[0]
-                    for bbox in bboxes:
-                        face_id = int(bbox[5])
-                        if face_id in self.tracked_face.keys():
-                            id_list = self.tracked_face[face_id]["id"]
-                            name_list = self.tracked_face[face_id]["name"]
-                            if len(id_list):
-                                id = self.most_frequent(id_list)
-                                name = self.most_frequent(name_list)
+                            # #TODO check
+                            if person_info["person_id"] != "unrecognize":
+                                person_doc = PersonDoc(id=person_info["person_id"], name=person_info["person_name"])
+                                person_dict = person_doc.dict()
+                                person_dict["state"] = state
+                                #TODO check liveness
                             else:
-                                id = "unknown"
-                                name = "unknown"
-                            person_dicts.append({"id": id, "name": name, "number_frame": len(id_list)})
+                                person_dict = {"id": "unknown", "name": "unknown"}
+                            self.tracked_face[key]["id"].append(person_dict["id"])
+                            self.tracked_face[key]["name"].append(person_dict["name"])
+                            self.tracked_face[key]["time"] = time.time()
+                    if len(detection_results) != 0:
+                        bboxes = detection_results[0]
+                        for bbox in bboxes:
+                            face_id = int(bbox[5])
+                            if face_id in self.tracked_face.keys():
+                                id_list = self.tracked_face[face_id]["id"]
+                                name_list = self.tracked_face[face_id]["name"]
+                                if len(id_list):
+                                    id = self.most_frequent(id_list)
+                                    name = self.most_frequent(name_list)
+                                else:
+                                    id = "unknown"
+                                    name = "unknown"
+                                person_dicts.append({"id": id, "name": name, "number_frame": len(id_list)})
 
-                result["person_dict"] = person_dicts
-            result["image"] = image
-            
-            self.result_queue.put(result)
+                    result["person_dict"] = person_dicts
+                result["image"] = image
+                
+                self.result_queue.put(result)
 
     def search(self, embed_vector, result):
         pass

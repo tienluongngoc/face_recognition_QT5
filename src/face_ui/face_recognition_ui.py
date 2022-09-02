@@ -1,6 +1,13 @@
-from PyQt5.QtWidgets import QApplication, QDialog, QMainWindow, QFileDialog
+
+from asyncio import tasks
 from PyQt5.QtGui import QImage, QPixmap
 from PyQt5 import QtCore, QtWidgets
+from PyQt5.QtWidgets import (QApplication, 
+                            QDialog,
+                             QMainWindow, 
+                             QFileDialog,
+                             QWidget, 
+                             QMessageBox)
 from datetime import datetime
 from uuid import uuid4
 import numpy as np
@@ -20,12 +27,12 @@ from .update_person import UpDatePersonWindow
 from src.schemas.validation import Validation
 from src.face_ui.face_ui import Ui_MainWindow
 
-class FaceRecognitionUI:
-    def __init__(self) -> None:
-        self.MainWindow = QtWidgets.QMainWindow()
+class FaceRecognitionUI(QMainWindow):
+    def __init__(self):
+        QMainWindow.__init__(self)
         self.ui_main_windown = Ui_MainWindow()
-        self.ui_main_windown.setupUi(self.MainWindow)
-        
+        self.ui_main_windown.setupUi(self)
+
         self.timer = QtCore.QTimer()
         self.timer.start(20)
         self.timer.timeout.connect(self.visualize_results_on_screen)
@@ -49,7 +56,7 @@ class FaceRecognitionUI:
         self.person_management =  PersonManagement(self.config, self.database)
         self.face_management = FaceManagement(self.config, self.database)
         self.face_recognition_app = FaceRecognitionApp()
-        self.task = self.face_recognition_app.get_task()
+        self.tasks = self.face_recognition_app.get_task()
         self.frame_queue = DataQueue.__call__().get_frame_queue()
         self.result_queue = ResultQueue.__call__().get_result_queue()
         self.snapshot = {}
@@ -60,9 +67,6 @@ class FaceRecognitionUI:
         self.face_recognition_app.run()
         self.initialize()
         self.visualize_results_on_screen()
-        
-    
-
     #=====================================================================
     #======================== Table clicked event ========================
     #=====================================================================
@@ -205,7 +209,7 @@ class FaceRecognitionUI:
     def chose_face_image(self):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        file_name, _ = QFileDialog.getOpenFileName(self.MainWindow,"QFileDialog.getOpenFileName()",
+        file_name, _ = QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()",
                      "","All Files (*);;Python Files (*.py)", options=options)
         self.ui_main_windown.tb_path.setText(file_name)
 
@@ -226,7 +230,7 @@ class FaceRecognitionUI:
         person_name =  self.ui_main_windown.tb_add_person_name.text()
         face_id = self.ui_main_windown.tb_face_id.text()
         message = f"Do you want to delete face ID: {face_id} of {person_name}?"
-        confirm_dlg = ConfirmDialog(self.MainWindow, message)
+        confirm_dlg = ConfirmDialog(self, message)
         if confirm_dlg.exec():
             self.face_management.delete_face_by_id(person_id, face_id)
         self.load_faces_db_to_table(person_id)
@@ -245,11 +249,11 @@ class FaceRecognitionUI:
     def delete_person(self):
         id = self.ui_main_windown.tb_add_person_id.text()
         message = f"Do you want to delete person id: {id}?"
-        confirm_dlg = ConfirmDialog(self.MainWindow, message)
+        confirm_dlg = ConfirmDialog(self, message)
         if confirm_dlg.exec():
             res = self.person_management.delete_person_by_id(id)
             if res == Validation.DETETE_PERSON_SUCCESSFULY:
-                info_dlg = InfoDialog(self.MainWindow, f"Delete person id: {id}, successfuly!")
+                info_dlg = InfoDialog(self, f"Delete person id: {id}, successfuly!")
                 info_dlg.exec()
         self.load_people_db_to_table()
 
@@ -283,7 +287,7 @@ class FaceRecognitionUI:
 
     def visualize_recognition_results(self, frame_data):
         image = frame_data["image"]
-        if self.task["face_recognizer"].is_enable():
+        if self.tasks["face_recognizer"].is_enable():
             if "detection_results" in frame_data.keys():
                 detection_results = frame_data["detection_results"]
                 if len(detection_results) != 0:
@@ -336,15 +340,15 @@ class FaceRecognitionUI:
             self.time_list[i].setText(str(datetime.fromtimestamp(self.snapshot[face_id]["time"])))
     
     def controlTimer(self):
-        if not self.task["face_recognizer"].is_enable():
+        if not self.tasks["face_recognizer"].is_enable():
             self.ui_main_windown.pushButton.setText("Pause")
-            self.task["face_recognizer"].enable()
+            self.tasks["face_recognizer"].enable()
         else:
             self.ui_main_windown.pushButton.setText("Start")
-            self.task["face_recognizer"].disable()
+            self.tasks["face_recognizer"].disable()
 
     def show_window(self):
-        self.MainWindow.show()
+        self.show()
 
     def snap_sort(self, face_ids, time_list):
         """"
@@ -360,3 +364,21 @@ class FaceRecognitionUI:
                     time_list[j] = t_tmp
                     face_ids[j] = id_tmp
         return face_ids, time_list
+
+    def closeEvent(self, event):
+        close = QMessageBox()
+        close.setText("You sure to close program?")
+        close.setStandardButtons(QMessageBox.Yes | QMessageBox.Cancel)
+        close = close.exec()
+        if close == QMessageBox.Yes:
+            event.accept()
+            for task_key in self.tasks.keys():
+                if "video_reader" in task_key:
+                    self.tasks[task_key].stop_thread()
+                if "face_recognizer" in task_key:
+                    self.tasks[task_key].stop_thread()
+        else:
+            event.ignore()
+
+    
+    

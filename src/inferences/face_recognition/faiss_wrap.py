@@ -1,5 +1,6 @@
 import faiss
 import numpy as np
+from src.inferences.utils.face_detect import Face
 from src.database.PersonDB import PersonDatabase
 import threading, queue, time, enum
 from datetime import datetime
@@ -31,6 +32,7 @@ class FAISS(metaclass=Singleton):
 		self.reload_model_worker = threading.Thread(target=self.run_reload_model)
 		self.change_all_db_worker = threading.Thread(target=self.run_change_all_db)
 		self.initialize()
+		self.is_stop = False
 
 	def initialize(self):
 		self.local_db.initialize_local_db()
@@ -47,6 +49,9 @@ class FAISS(metaclass=Singleton):
 		self.change_db_worker.start()
 		self.reload_model_worker.start()
 		self.change_all_db_worker.start()
+
+	def stop_thread(self):
+		self.is_stop = True
 	
 	def stop(self):
 		self.change_db_worker.join()
@@ -54,7 +59,7 @@ class FAISS(metaclass=Singleton):
 		self.change_all_db_worker.join()
 
 	def run_change_db(self):
-		while True:
+		while not self.is_stop:
 			while not self.change_db_events.empty():
 				event = self.change_db_events.get()
 				key = list(event.keys())[0]
@@ -78,7 +83,7 @@ class FAISS(metaclass=Singleton):
 			time.sleep(self.config.solve_event_delay)
 	
 	def run_reload_model(self):
-		while True:
+		while not self.is_stop:
 			if self.db_change:
 				self.reload()
 				self.db_change = False
@@ -86,7 +91,7 @@ class FAISS(metaclass=Singleton):
 			time.sleep(self.config.retrain_delay)
 
 	def run_change_all_db(self):
-		while True:
+		while not self.is_stop:
 			time.sleep(self.config.reload_all_db_delay)
 			logger.info(f"[{datetime.now()}][{self.__class__.__name__}]: Reload all document for recognition model.")
 			self.local_db.initialize_local_db()
