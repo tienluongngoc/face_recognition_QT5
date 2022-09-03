@@ -23,18 +23,18 @@ class SCRFD(metaclass=Singleton):
 		else:
 			import onnxruntime
 			if config.device == "gpu":
-				provider = "CPUExecutionProvider"
+				provider = "CUDAExecutionProvider"
 			elif config.device == "cpu":
 				provider = "CPUExecutionProvider"
 			elif config.device == "tensorrt":
 				provider = "TensorrtExecutionProvider"
 			else:
-				pass
-				# assert False, f"[{datetime.now()}][{self.__class__.__name__}]: Error device, device is only one \
-				# 	of three values: ['cpu', 'gpu', 'tensorrt']"
-			
-			self.session = onnxruntime.InferenceSession(config.model_path)
+				assert False, f"[{datetime.now()}][{self.__class__.__name__}]: Error device, device is only one \
+					of three values: ['cpu', 'gpu', 'tensorrt']"
+			print(provider)
+			self.session = onnxruntime.InferenceSession(config.model_path, providers=[provider])
 			logger.info(f"[{datetime.now()}][{self.__class__.__name__}]: Using local detection model.")
+
 		self.center_cache = {}
 
 	def forward(self, img: np.ndarray, threshold: float):
