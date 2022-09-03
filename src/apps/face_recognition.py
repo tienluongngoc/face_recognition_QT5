@@ -83,7 +83,7 @@ class FaceRecognition(Thread):
                 face_id = int(detection_result[5])
                 if face_id in self.tracked_face.keys():
                     skiped = self.tracked_face[face_id]["skiped"]
-                    if skiped > 5 or skiped == 0:
+                    if skiped > 2 or skiped == 0:
                         face = Face(bbox=detection_result[:4], kps=detection_results[1][i],det_score=detection_result[-2])
                         encode_result = self.face_encode.get(image, face)
                         encode_results[face_id] = encode_result

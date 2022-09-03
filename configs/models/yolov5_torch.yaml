@@ -1,0 +1,5 @@
+weight: weights\yolov5s-face.pt
+device: "cuda"
+input_shape: [640,640]
+confidence_threshold: 0.5
+iou_threshold: 0.5

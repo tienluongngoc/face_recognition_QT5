@@ -1,0 +1,16 @@
+model_name: "arcface"
+remote: false
+model_path: "./weights/arcface.onnx"
+device: gpu
+input_names: 
+- "data"
+input_shape: 112  
+input_width: 112
+input_height: 112
+output_names: 
+- "fc1"
+output_shape: 512
+threshold: 0.5
+input_mean: 0.0
+input_std: 1.0
+engine_default: "ArcFace"

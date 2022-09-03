@@ -15,8 +15,8 @@ class ArcFaceTorch(metaclass=Singleton):
         self.input_size = tuple([config.input_width, config.input_height])
         self.output_shape = tuple([1, config.output_shape])
         self.device = "cuda"
-        self.model = get_model("r100", fp16=False).to(self.device)
-        self.model.load_state_dict(torch.load("backbone.pth"))
+        self.model = get_model("r50", fp16=False).to(self.device)
+        self.model.load_state_dict(torch.load("weights\\arc50.pth"))
         self.model.eval()
         self.model.to(self.device)
 
@@ -30,7 +30,7 @@ class ArcFaceTorch(metaclass=Singleton):
         img = np.transpose(img, (2, 0, 1))
         img = torch.from_numpy(img).unsqueeze(0).float()
         img.div_(255).sub_(0.5).div_(0.5)
-        img = torch.tensor(img, device="cuda").float()
+        img = torch.tensor(img, device=self.device).float()
 
         feat = self.model(img)
         feat = feat.cpu().detach().numpy()

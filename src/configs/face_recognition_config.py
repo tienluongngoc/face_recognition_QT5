@@ -6,6 +6,7 @@ from .arcface_config import ArcFaceConfig
 from .faiss_config import FaissConfig
 from .fasnet_config import FASNetConfig
 from .yolov5_config import Yolov5Config
+from .yolov5_torch_config import Yolov5TorchConfig
 from .ui_config import UIConfig
 
 class Singleton(type):
@@ -30,6 +31,8 @@ class FaceRecogAPIConfig(BaseConfig, metaclass=Singleton):
 			result = SCRFDConfig(self.config["models"]["detection"]["engine_config"]["scrfd"])
 		elif self.config["models"]["detection"]["engine"] == "yolov5":
 			result = Yolov5Config(self.config["models"]["detection"]["engine_config"]["yolov5"])
+		elif self.config["models"]["detection"]["engine"] == "yolov5_torch":
+			result = Yolov5TorchConfig(self.config["models"]["detection"]["engine_config"]["yolov5_torch"])
 		else:
 			pass
 		return result

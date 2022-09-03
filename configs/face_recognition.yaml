@@ -27,11 +27,12 @@ model_server:
 
 models:
   detection:
-    engine: scrfd
+    engine: yolov5_torch
     engine_config:
       dummy: null
       scrfd: configs/models/scrfd.yaml
       yolov5: configs/models/yolov5.yaml
+      yolov5_torch: configs/models/yolov5_torch.yaml
   encode:
     engine: arcface_torch
     engine_config:

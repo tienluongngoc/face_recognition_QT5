@@ -295,8 +295,8 @@ class FaceRecognitionUI(QMainWindow):
                     person_dicts = frame_data["person_dict"]
                     for i,bbox in enumerate(bboxes):
                         #only visualize face which is recognize at least 5 frames
-                        if int(person_dicts[i]["number_frame"]) < 3:
-                            continue 
+                        # if int(person_dicts[i]["number_frame"]) < 3:
+                        #     continue 
                         person_dict = person_dicts[i]
                         face_id = int(bbox[5])
                         if (person_dict["id"] != "unknown"):

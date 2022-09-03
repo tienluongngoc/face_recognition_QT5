@@ -38,9 +38,9 @@ class VideoReader(Subject, Thread):
             if not self.pause:
                 try:
                     grabbed, self.frame = self.cap.read()
-                    # print("frame queue size: ", self.frame_queue.qsize())
+                    print("frame queue size: ", self.frame_queue.qsize())
                     self.frame_count += 1
-                    if self.frame_count < 3:
+                    if self.frame_count <= 1:
                         continue
                     self.frame_count = 0
                     # print(self.frame.shape)
