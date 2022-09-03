@@ -1,7 +1,7 @@
 model_name: "scrfd"
 remote: false
 model_path: "./weights/scrfd_500m_bnkps.onnx"
-device: gpu
+device: cpu
 input_shape: 640
 input_width: 640
 input_height: 640

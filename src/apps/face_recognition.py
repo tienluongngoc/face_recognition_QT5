@@ -49,7 +49,6 @@ class FaceRecognition(Thread):
         ids = {}
         if len(bboxes) != 0:
             tracks = self.tracker.update(bboxes)
-            # print(tracks)
             for i,bbox in enumerate(bboxes):
                 for j,track in enumerate(tracks):
                     bb1 = [bbox[0], bbox[1], bbox[2], bbox[3]]

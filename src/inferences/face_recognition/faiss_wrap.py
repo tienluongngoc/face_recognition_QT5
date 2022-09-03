@@ -28,11 +28,13 @@ class FAISS(metaclass=Singleton):
 		self.is_trained = False
 		self.change_db_events = queue.Queue()
 		self.db_change = False
+		self.is_stop = False
 		self.change_db_worker = threading.Thread(target=self.run_change_db)
 		self.reload_model_worker = threading.Thread(target=self.run_reload_model)
 		self.change_all_db_worker = threading.Thread(target=self.run_change_all_db)
 		self.initialize()
-		self.is_stop = False
+		
+		
 
 	def initialize(self):
 		self.local_db.initialize_local_db()
@@ -51,6 +53,7 @@ class FAISS(metaclass=Singleton):
 		self.change_all_db_worker.start()
 
 	def stop_thread(self):
+		self.stop()
 		self.is_stop = True
 	
 	def stop(self):

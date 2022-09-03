@@ -24,3 +24,4 @@ yolov5-face
 models
 *.mp4
 .vscode
+*.pth

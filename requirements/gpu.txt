@@ -4,24 +4,21 @@ Pillow
 blinker
 pyyaml
 onnx
-torch
-torchvision
-nvidia-tensorrt
+# torch
+# torchvision
 onnxruntime
 uvicorn
 aiofiles
 python-multipart
 tritonclient
-opencv-python-headless
+opencv-python==4.5.3.56
 requests
 scikit-image
-# faiss-cpu
 PyQt5
-faiss-gpu
+numba
+filterpy
 grpcio
 # conda install pytorch torchvision torchaudio cudatoolkit=11.6 -c pytorch -c conda-forge
 # conda install -c conda-forge pycuda
-numba
-filterpy
-
-#TODO
+# conda install -c conda-forge faiss-gpu
+# nvidia-tensorrt

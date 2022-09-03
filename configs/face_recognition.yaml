@@ -33,11 +33,12 @@ models:
       scrfd: configs/models/scrfd.yaml
       yolov5: configs/models/yolov5.yaml
   encode:
-    engine: arcface
+    engine: arcface_torch
     engine_config:
       dummy: null
       arcface: configs/models/arcface.yaml
       arcface_trt: configs/models/arcface_trt.yaml
+      arcface_torch: configs/models/arcface.yaml
   recognition:
     engine: faiss_cpu
     engine_config:

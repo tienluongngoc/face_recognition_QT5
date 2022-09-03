@@ -23,16 +23,17 @@ class SCRFD(metaclass=Singleton):
 		else:
 			import onnxruntime
 			if config.device == "gpu":
-				provider = "CUDAExecutionProvider"
+				provider = "CPUExecutionProvider"
 			elif config.device == "cpu":
 				provider = "CPUExecutionProvider"
 			elif config.device == "tensorrt":
 				provider = "TensorrtExecutionProvider"
 			else:
-				assert False, f"[{datetime.now()}][{self.__class__.__name__}]: Error device, device is only one \
-					of three values: ['cpu', 'gpu', 'tensorrt']"
+				pass
+				# assert False, f"[{datetime.now()}][{self.__class__.__name__}]: Error device, device is only one \
+				# 	of three values: ['cpu', 'gpu', 'tensorrt']"
 			
-			self.session = onnxruntime.InferenceSession(config.model_path, providers=[provider])
+			self.session = onnxruntime.InferenceSession(config.model_path)
 			logger.info(f"[{datetime.now()}][{self.__class__.__name__}]: Using local detection model.")
 		self.center_cache = {}
 
@@ -88,6 +89,7 @@ class SCRFD(metaclass=Singleton):
 		return scores_list, bboxes_list, kpss_list
 	
 	def detect(self, img, input_size = None, max_num=0, metric='default'):
+		
 		assert input_size is not None or self.input_size is not None
 		input_size = self.input_size if input_size is None else input_size   
 		det_img, det_scale = custom_resize(img, input_size)
