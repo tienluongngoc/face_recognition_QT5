@@ -40,7 +40,7 @@ class VideoReader(Subject, Thread):
                     grabbed, self.frame = self.cap.read()
                     print("frame queue size: ", self.frame_queue.qsize())
                     self.frame_count += 1
-                    if self.frame_count <= 1:
+                    if self.frame_count <= 2:
                         continue
                     self.frame_count = 0
                     # print(self.frame.shape)

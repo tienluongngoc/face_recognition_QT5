@@ -16,7 +16,7 @@ logs/*
 db_server
 weights/faiss/embed_vector.index
 images
-*.jpg
+# *.jpg
 *.engine
 *.pt
 *.onnx
@@ -24,3 +24,7 @@ yolov5-face
 *.mp4
 .vscode
 *.pth
+test_trt.py
+qt.py
+result.jpg
+tienln.jpg

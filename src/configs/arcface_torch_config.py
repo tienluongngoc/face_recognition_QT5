@@ -5,21 +5,20 @@ class ArcFaceTorchConfig(ModelConfig):
 		super(ArcFaceTorchConfig, self).__init__(config_path)
 	
 	@property
-	def threshold(self):
-		return self.config["threshold"]
+	def weight(self):
+		return self.config["weight"]
+
+	@property
+	def device(self):
+		return self.config["device"]
+
 	
 	@property
-	def input_mean(self):
-		return self.config["input_mean"]
-	
-	@property
-	def input_std(self):
-		return self.config["input_std"]
+	def backbone(self):
+		return self.config["backbone"]
 	
 	@property
 	def engine_default(self):
 		return self.config["engine_default"]
 
-	@property
-	def output_shape(self):
-		return self.config["output_shape"]
+	

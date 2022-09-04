@@ -12,11 +12,11 @@ import torch
 class ArcFaceTorch(metaclass=Singleton):
     def __init__(self, config: ArcFaceTorchConfig) -> None:
         self.config = config
-        self.input_size = tuple([config.input_width, config.input_height])
-        self.output_shape = tuple([1, config.output_shape])
-        self.device = "cuda"
-        self.model = get_model("r50", fp16=False).to(self.device)
-        self.model.load_state_dict(torch.load("weights\\arc50.pth"))
+        self.device = config.device
+        self.weight = config.weight
+        self.backbone = config.backbone
+        self.model = get_model(self.backbone, fp16=False).to(self.device)
+        self.model.load_state_dict(torch.load(self.weight))
         self.model.eval()
         self.model.to(self.device)
 

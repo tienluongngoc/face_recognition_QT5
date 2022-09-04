@@ -39,7 +39,7 @@ models:
       dummy: null
       arcface: configs/models/arcface.yaml
       arcface_trt: configs/models/arcface_trt.yaml
-      arcface_torch: configs/models/arcface.yaml
+      arcface_torch: configs\models\arcface_torch.yaml
   recognition:
     engine: faiss_cpu
     engine_config:

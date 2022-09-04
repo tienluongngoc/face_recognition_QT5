@@ -98,7 +98,7 @@ class FaceRecognitionUI(QMainWindow):
             self.ui_main_windown.table_face.setItem(row, 0, QtWidgets.QTableWidgetItem(face["id"]))
             self.ui_main_windown.table_face.setItem(row, 1, QtWidgets.QTableWidgetItem(face["imgPath"]))
 
-        # self.show_db_face_image_click_event()
+        self.show_db_face_image_click_event()
         self.init_show_db_face_image() # load the first face of list face, 1st row
     
 
@@ -126,7 +126,7 @@ class FaceRecognitionUI(QMainWindow):
             self.ui_main_windown.tb_path.setText(img_path)
             self.ui_main_windown.tb_face_id.setText(id)
         except:
-            image = cv2.imread("libs/avata.png")
+            image = cv2.imread("libs/avata.jpg")
             self.view_image(image, 491, 321, self.ui_main_windown.face_preview)
 
 
@@ -173,14 +173,7 @@ class FaceRecognitionUI(QMainWindow):
             self.ui_main_windown.table_people.setItem(row, 0, QtWidgets.QTableWidgetItem(person["name"]))
             self.ui_main_windown.table_people.setItem(row, 1, QtWidgets.QTableWidgetItem(str(person["id"])))
             row=row+1
-        # self.init_person_text_box() # Load the first row at this table into textbox
-
-
-
-
-    
-
-    
+        self.init_person_text_box() # Load the first row at this table into textbox
 
     
     def initialize(self):
@@ -223,7 +216,9 @@ class FaceRecognitionUI(QMainWindow):
         face_ids = [int(face["id"]) for face in all_faces]
         face_id = 0 if len(face_ids)==0 else  max(face_ids)+1
         res = self.face_management.insert_face(person_id, str(face_id), image)
+        print(res)
         self.load_faces_db_to_table(person_id)
+        self.init_face_text_box()
 
     def delete_face(self):
         person_id = self.ui_main_windown.tb_add_person_id.text()
@@ -234,6 +229,7 @@ class FaceRecognitionUI(QMainWindow):
         if confirm_dlg.exec():
             self.face_management.delete_face_by_id(person_id, face_id)
         self.load_faces_db_to_table(person_id)
+        self.init_face_text_box()
 
     #=====================================================================
     #============================ person CRUD ============================

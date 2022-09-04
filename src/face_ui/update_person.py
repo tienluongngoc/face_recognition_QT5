@@ -33,5 +33,5 @@ class UpDatePersonWindow:
             if res_1 ==  Validation.UPDATE_PERSON_NAME and res_2 == Validation.UPDATE_PERSON_ID:
                 info_dlg = InfoDialog(self.this_window, f"Update successfuly!")
                 info_dlg.exec()
-            self.main_window.load_all_people()
+            self.main_window.load_people_db_to_table()
             self.this_window.hide()
