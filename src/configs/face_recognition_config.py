@@ -55,14 +55,6 @@ class FaceRecogAPIConfig(BaseConfig, metaclass=Singleton):
 		return engine_name
 
 	@property
-	def anti_spoofing_v1se(self):
-		return FASNetConfig(self.config["models"]["face_anti_spoofing_path"]["v1se"])
-	
-	@property
-	def anti_spoofing_v2(self):
-		return FASNetConfig(self.config["models"]["face_anti_spoofing_path"]["v2"])
-
-	@property
 	def recognition(self):
 		if self.config["models"]["recognition"]["engine"] == "faiss_cpu":
 			result = FaissConfig(self.config["models"]["recognition"]["engine_config"]["faiss_cpu"])
@@ -76,24 +68,10 @@ class FaceRecogAPIConfig(BaseConfig, metaclass=Singleton):
 		return engine_name
 	
 	@property
-	def api(self):
-		return self.config["api"]
-	
-	@property
 	def mongodb(self):
 		return self.config["mongodb"]
 	
 	@property
 	def faces(self):
 		return self.config["faces"]
-	
-	@property
-	def model_server(self):
-		return self.config["model_server"]
-
-	@property
-	def ui(self):
-		config_path = self.config["ui"]
-		ui_config = UIConfig(config_path)
-		return ui_config
 	

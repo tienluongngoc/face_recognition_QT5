@@ -1,8 +1,8 @@
-api:
-  server_host: "192.168.2.195"
-  server_port: 9950
-  log_level: "info"
-  log_config: "configs/log_config.ini"
+# api:
+#   server_host: "192.168.2.195"
+#   server_port: 9950
+#   log_level: "info"
+#   log_config: "configs/log_config.ini"
 
 mongodb:
   hostname: "192.168.2.195"
@@ -20,10 +20,10 @@ faces:
   path: "./faces"
   end: ".png"
 
-model_server:
-  host: "192.168.2.195"
-  port: 7501
-  running: false
+# model_server:
+#   host: "192.168.2.195"
+#   port: 7501
+#   running: false
 
 models:
   detection:
@@ -46,4 +46,4 @@ models:
       dumpy: null
       faiss_cpu: configs/models/faiss.yaml
       faiss_gpu: configs/models/faiss.yaml
-ui: configs/ui_config.yaml
+# ui: configs/ui_config.yaml

@@ -49,9 +49,7 @@ class FaceRecognitionUI(QMainWindow):
         self.ui_main_windown.table_people.cellClicked.connect(self.person_table_click_envent)
         self.ui_main_windown.table_face.cellClicked.connect(self.show_db_face_image_click_event)
         
-
         self.config =  FaceRecognitionConfigInstance.__call__().get_config()
-        self.ui_main_windown_config = self.config.ui
         self.database = DatabaseInstance.__call__().get_database()
         self.person_management =  PersonManagement(self.config, self.database)
         self.face_management = FaceManagement(self.config, self.database)
@@ -83,7 +81,6 @@ class FaceRecognitionUI(QMainWindow):
         self.load_faces_db_to_table(id) # Load all faces of person id into face table
         self.init_face_text_box() # Load the first row of face table into text box
 
-
     #=====================================================================
     #========================  ========================
     #=====================================================================
@@ -101,7 +98,6 @@ class FaceRecognitionUI(QMainWindow):
         self.show_db_face_image_click_event()
         self.init_show_db_face_image() # load the first face of list face, 1st row
     
-
     def init_show_db_face_image(self):
         # Select the first row at the face table ==> face_id and path
         # Show this face to preview
@@ -159,11 +155,6 @@ class FaceRecognitionUI(QMainWindow):
             self.ui_main_windown.tb_face_id.setText("")
             self.ui_main_windown.tb_path.setText("")
 
-
-
-    
-        
-
     def load_people_db_to_table(self):
         # Load all people in database into people table
         all_people = self.database.get_all_people()
@@ -175,7 +166,6 @@ class FaceRecognitionUI(QMainWindow):
             row=row+1
         self.init_person_text_box() # Load the first row at this table into textbox
 
-    
     def initialize(self):
         _translate = QtCore.QCoreApplication.translate
         self.ui_main_windown.tabWidget.setTabText(self.ui_main_windown.tabWidget.indexOf(self.ui_main_windown.tab), _translate("MainWindow", "Camera"))
@@ -186,7 +176,6 @@ class FaceRecognitionUI(QMainWindow):
         self.load_people_db_to_table()
         self.init_face_table()
         
-    
     def people_tabale_properties(self):
         self.ui_main_windown.table_people.setColumnWidth(0,215)
         self.ui_main_windown.table_people.setColumnWidth(1,110)
