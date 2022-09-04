@@ -142,7 +142,6 @@ class FaceRecognitionUI(QMainWindow):
         self.ui_main_windown.tb_add_person_id.setText(id)
         self.ui_main_windown.tb_add_person_name.setText(name)
 
-    
     def init_face_text_box(self):
         # Init: if person id has face list, load the first row into textbox
         number_items = self.ui_main_windown.table_face.rowCount()

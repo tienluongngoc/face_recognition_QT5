@@ -20,10 +20,6 @@ class ConfirmDialog(QDialog):
         self.layout.addWidget(message)
         self.layout.addWidget(self.buttonBox)
         self.setLayout(self.layout)
-
-        
-
-
 class InfoDialog(QDialog):
     def __init__(self, parent=None, message=None) -> None:
         super().__init__(parent)

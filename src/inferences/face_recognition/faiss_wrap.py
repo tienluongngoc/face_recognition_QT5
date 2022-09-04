@@ -34,8 +34,6 @@ class FAISS(metaclass=Singleton):
 		self.change_all_db_worker = threading.Thread(target=self.run_change_all_db)
 		self.initialize()
 		
-		
-
 	def initialize(self):
 		self.local_db.initialize_local_db()
 		if not os.path.exists(self.config.model_path):
@@ -48,9 +46,9 @@ class FAISS(metaclass=Singleton):
 		if self.config.device == "gpu":
 			res = faiss.StandardGpuResources()
 			self.index = faiss.index_cpu_to_gpu(res, 0, self.index)
-		self.change_db_worker.start()
-		self.reload_model_worker.start()
-		self.change_all_db_worker.start()
+		# self.change_db_worker.start()
+		# self.reload_model_worker.start()
+		# self.change_all_db_worker.start()
 
 	def stop_thread(self):
 		self.stop()
