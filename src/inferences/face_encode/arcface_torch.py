@@ -1,4 +1,4 @@
-from msilib.schema import Class
+# from msilib.schema import Class
 import numpy as np
 import cv2
 from ..utils import face_align, face_detect

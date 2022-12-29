@@ -5,7 +5,7 @@ from src.configs.yolov5_config import Yolov5Config
 from src.configs.scrfd_config import SCRFDConfig
 from src.configs.face_recognition_config import FaceRecogAPIConfig
 from src.configs.yolov5_torch_config import Yolov5TorchConfig
-from src.inferences.face_detection.yolov5_torch import YOLOV5Torch
+# from src.inferences.face_detection.yolov5_torch import YOLOV5Torch
 
 class FaceDetectionFactory:
     def __init__(self, config:FaceRecogAPIConfig) -> None:
@@ -18,6 +18,6 @@ class FaceDetectionFactory:
         elif self.engine_name == "yolov5":
             from inferences.face_detection.yolov5 import YOLOV5
             engine = YOLOV5(self.detection_config)
-        elif self.engine_name == "yolov5_torch":
-            engine = YOLOV5Torch(self.detection_config)
+        # elif self.engine_name == "yolov5_torch":
+        #     engine = YOLOV5Torch(self.detection_config)
         return engine

@@ -4,7 +4,7 @@ pymongo
 Pillow
 blinker
 pyyaml
-onnx
+# onnx
 torch
 torchvision
 onnxruntime
@@ -21,3 +21,5 @@ grpcio
 numba
 filterpy
 tornado
+tqdm
+pandas

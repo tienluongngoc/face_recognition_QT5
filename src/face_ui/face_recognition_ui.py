@@ -163,7 +163,7 @@ class FaceRecognitionUI(QMainWindow):
             self.ui_main_windown.table_people.setItem(row, 0, QtWidgets.QTableWidgetItem(person["name"]))
             self.ui_main_windown.table_people.setItem(row, 1, QtWidgets.QTableWidgetItem(str(person["id"])))
             row=row+1
-        self.init_person_text_box() # Load the first row at this table into textbox
+        # self.init_person_text_box() # Load the first row at this table into textbox
 
     def initialize(self):
         _translate = QtCore.QCoreApplication.translate

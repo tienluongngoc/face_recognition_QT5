@@ -1,5 +1,5 @@
 mongodb:
-  hostname: "192.168.2.195"
+  hostname: "192.168.0.202"
   port: 27017
   user: tienln 
   password: tienln
@@ -15,14 +15,14 @@ faces:
   end: ".png"
 models:
   detection:
-    engine: yolov5_torch
+    engine: scrfd
     engine_config:
       dummy: null
       scrfd: configs/models/scrfd.yaml
       yolov5: configs/models/yolov5.yaml
       yolov5_torch: configs/models/yolov5_torch.yaml
   encode:
-    engine: arcface_torch
+    engine: arcface
     engine_config:
       dummy: null
       arcface: configs/models/arcface.yaml

@@ -1,6 +1,6 @@
 model_name: "arcface"
 remote: false
-model_path: "weights\\arcfaceresnet100-8.onnx"
+model_path: "weights/arcface.onnx"
 device: cpu
 input_names: 
 - "data"
