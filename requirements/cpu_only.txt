@@ -1,25 +1,12 @@
-#python3.6
-fastapi
 pymongo
-Pillow
-blinker
 pyyaml
-# onnx
-torch
-torchvision
 onnxruntime
 uvicorn
-aiofiles
-python-multipart
-tritonclient
-# opencv-python
-requests
+# conda install -c fastai opencv-python-headless
+# conda install -c pytorch faiss-cpu
 scikit-image
 PyQt5
-faiss-cpu
-grpcio
+numpy
 numba
 filterpy
-tornado
-tqdm
-pandas
+pydantic
