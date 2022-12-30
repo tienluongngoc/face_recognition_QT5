@@ -1,5 +1,5 @@
-onnx: weights/yolov5s_face.onnx
-engine: weights/yolov5s_face.engine
+onnx: weights/yolov5s-face.onnx
+engine: weights/yolov5s-face.engine
 device: "cuda"
 half: False
 input_name: "input"

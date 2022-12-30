@@ -1,4 +1,4 @@
-onnx: models/arcface.onnx
+onnx: weights/arcface.onnx
 engine: weights/arcface.engine
 device: "cuda"
 half: False

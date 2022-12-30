@@ -4,12 +4,12 @@ import numpy as np
 import torch
 import torch.nn as nn
 import tensorrt as trt 
-from utils.logger import Logger
+from src.utils.logger import Logger
 import os.path
 class TRTModel(nn.Module):
     def __init__(self, config):
         super().__init__()
-        print(config.half)
+        # print(config.half)
         self.engine = config.engine
         self.onnx = config.onnx
         self.device = config.device
@@ -24,7 +24,7 @@ class TRTModel(nn.Module):
         self.logger.info(f'Loading {self.engine} for TensorRT inference...')
         Binding = namedtuple('Binding', ('name', 'dtype', 'shape', 'data', 'ptr'))
         trt_logger = trt.Logger(trt.Logger.INFO)
-        
+        self.export_engine()
         with open(self.engine, 'rb') as f, trt.Runtime(trt_logger) as runtime:
             model = runtime.deserialize_cuda_engine(f.read())
 

@@ -1,13 +1,13 @@
-import faiss
-import numpy as np
 from src.inferences.utils.face_detect import Face
-from src.database.PersonDB import PersonDatabase
-import threading, queue, time, enum
-from datetime import datetime
-import os
-from ..base import Singleton
 from src.configs.faiss_config import FaissConfig
+from src.database.PersonDB import PersonDatabase
+from ..base import Singleton
+import threading, queue, time, enum
 from uvicorn.config import logger
+from datetime import datetime
+import numpy as np
+import faiss
+import os
 
 class ChangeEvent(enum.Enum):
 	remove_person = 1

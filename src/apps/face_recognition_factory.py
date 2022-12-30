@@ -1,5 +1,5 @@
-from src.inferences.face_recognition.faiss_wrap import FAISS
 from src.configs.face_recognition_config import FaceRecogAPIConfig
+from src.inferences.face_recognition.faiss_wrap import FAISS
 from src.database.database_instance import DatabaseInstance
 from src.utils.utils import Singleton
 

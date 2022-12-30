@@ -36,8 +36,3 @@ class Logger(object, metaclass=SingletonType):
 
     def get_logger(self):
         return self._logger
-
-# if __name__ == "__main__":
-#     logger = Logger.__call__().get_logger()
-#     logger.info("Hello, Logger")
-#     logger.debug("bug occured")

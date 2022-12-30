@@ -1,4 +1,0 @@
-weight: "weights\\arc50.pth"
-backbone: r50
-device: cuda
-engine_default: "ArcFace"

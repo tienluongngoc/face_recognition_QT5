@@ -13,9 +13,7 @@ class VideoReader(Subject, Thread):
     def __init__(self, config, frame_queue: Queue):
         Thread.__init__(self)
         super(VideoReader, self).__init__()
-        # self.camera_url = "images/face_detection.mp4"
-        # self.camera_url = "rtsp://admin:ATDJTN@192.168.1.99:554/H.264"
-        self.camera_url = 0
+        self.camera_url = "rtsp://localhost:8554/FR"
         self.sleep_time = 0#config[""]
         # self.camera_id = config["camera_id"]
         # self.location = config["location"]
@@ -38,15 +36,8 @@ class VideoReader(Subject, Thread):
             if not self.pause:
                 try:
                     grabbed, self.frame = self.cap.read()
-                    # print("frame queue size: ", self.frame_queue.qsize())
-                    # self.frame_count += 1
-                    # if self.frame_count <= 2:
-                    #     continue
-                    # self.frame_count = 0
-                    # print(self.frame.shape)
                     if grabbed == True:
                         time.sleep(self.sleep_time)
-                        # image = cv2.imread("images/cr7.jpg")
                         frame_data = {"image": self.frame,
                                     #   "location": self.location,
                                     #   "camera_id": self.camera_id, 
@@ -55,11 +46,9 @@ class VideoReader(Subject, Thread):
                         self.frame_queue.put(frame_data)
                         self.notify()
                         
-                    if self.frame_queue.qsize() >= 3:
+                    if self.frame_queue.qsize() >= 2:
                         self.frame_queue.get()
                     self.new_frame_time = time.time()
-                    # fps = 1/(self.new_frame_time-self.prev_frame_time)
-                    # print("fps:", fps, "qsize: ", self.frame_queue.qsize())
                     self.prev_frame_time = self.new_frame_time
                 except Exception as ex:
                     self.log_error(ex)

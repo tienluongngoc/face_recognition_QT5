@@ -1,12 +1,9 @@
 from .arcface_trt_config import ArcFaceTRTConfig
-from .arcface_torch_config import ArcFaceTorchConfig
 from .base_config import BaseConfig
 from .scrfd_config import SCRFDConfig
 from .arcface_config import ArcFaceConfig
 from .faiss_config import FaissConfig
-from .fasnet_config import FASNetConfig
 from .yolov5_config import Yolov5Config
-from .yolov5_torch_config import Yolov5TorchConfig
 from .ui_config import UIConfig
 
 class Singleton(type):

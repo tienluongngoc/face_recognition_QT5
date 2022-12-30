@@ -1,40 +1,27 @@
-from __future__ import division
-import numpy as np
-import cv2
+
 from ..utils.face_detect import nms, distance2bbox, distance2kps, custom_resize
+from src.configs.scrfd_config import SCRFDConfig
 from datetime import datetime
 from ..base import Singleton
-from src.configs.scrfd_config import SCRFDConfig
-from uvicorn.config import logger
+import onnxruntime
+import numpy as np
+import cv2
 
 class SCRFD(metaclass=Singleton):
 	def __init__(self, config: SCRFDConfig) -> None:
 		self.config = config
 		self.input_size = tuple([config.input_width, config.input_height])
-		if config.remote:
-			from ..model_server import Triton_inference
-			Triton_inference.initialize(
-				model_name=config.model_name,
-				input_names=config.input_names,
-				input_size=self.input_size,
-				output_names=config.output_names
-			)
-			logger.info(f"[{datetime.now()}][{self.__class__.__name__}]: Using detection model from model server.")
+		
+		if config.device == "gpu":
+			provider = "CUDAExecutionProvider"
+		elif config.device == "cpu":
+			provider = "CPUExecutionProvider"
+		elif config.device == "tensorrt":
+			provider = "TensorrtExecutionProvider"
 		else:
-			import onnxruntime
-			if config.device == "gpu":
-				provider = "CUDAExecutionProvider"
-			elif config.device == "cpu":
-				provider = "CPUExecutionProvider"
-			elif config.device == "tensorrt":
-				provider = "TensorrtExecutionProvider"
-			else:
-				assert False, f"[{datetime.now()}][{self.__class__.__name__}]: Error device, device is only one \
-					of three values: ['cpu', 'gpu', 'tensorrt']"
-			print(provider)
-			self.session = onnxruntime.InferenceSession(config.model_path, providers=[provider])
-			logger.info(f"[{datetime.now()}][{self.__class__.__name__}]: Using local detection model.")
-
+			assert False, f"[{datetime.now()}][{self.__class__.__name__}]: Error device, device is only one \
+				of three values: ['cpu', 'gpu', 'tensorrt']"
+		self.session = onnxruntime.InferenceSession(config.model_path, providers=[provider])
 		self.center_cache = {}
 
 	def forward(self, img: np.ndarray, threshold: float):
@@ -48,12 +35,7 @@ class SCRFD(metaclass=Singleton):
 			swapRB=True
 		)
 		
-		if self.config.remote:
-			from ..model_server import Triton_inference
-			results = Triton_inference.infer(self.config.model_name, blob)
-			net_outs = [results.as_numpy(name) for name in self.config.output_names]
-		else:
-			net_outs = self.session.run(self.config.output_names, {self.config.input_names[0] : blob})
+		net_outs = self.session.run(self.config.output_names, {self.config.input_names[0] : blob})
 
 		input_height = blob.shape[2]
 		input_width = blob.shape[3]

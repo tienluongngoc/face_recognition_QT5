@@ -1,18 +1,16 @@
-from unittest import skip
+
+from src.configs.config_instance import FaceRecognitionConfigInstance
 from .face_recognition_factory import FaceRecognitionFactory
-from src.inferences import face_detection, face_encode
-# from inferences import YOLOV5, SCRFD, ArcFace
 from .face_detection_factory import FaceDetectionFactory
 from .face_encode_factory import FaceEncodeFactory
 from src.inferences.utils.face_detect import Face
-from src.models.person import PersonDoc
 from .data_queue import DataQueue, ResultQueue
-import numpy as np
-from typing import List
-from threading import Thread
-import cv2
-from src.configs.config_instance import FaceRecognitionConfigInstance
+from src.models.person import PersonDoc
 from src.tracker.sort import Sort
+
+from threading import Thread
+from typing import List
+import numpy as np
 import time
 
 class FaceRecognition(Thread):
@@ -130,7 +128,6 @@ class FaceRecognition(Thread):
                 image =  self.frame_queue.get()["image"]
                 result = {}
                 if self.recognize:
-                    # print("--------------------------------------------------------------------------------------------------------------------------------------")
                     if image is None:
                         raise
                     detection_results,embed_vectors = self.encode(image)

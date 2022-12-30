@@ -1,7 +1,6 @@
 import sys
 import os
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
-# sys.path.append("./src")
 from src.face_ui.face_recognition_ui import FaceRecognitionUI
 from PyQt5 import QtCore, QtGui, QtWidgets
 

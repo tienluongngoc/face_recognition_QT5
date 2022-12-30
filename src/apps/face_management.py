@@ -1,28 +1,22 @@
-from distutils.command.config import config
-from src.database.PersonDB import PersonDatabase
-from src.models.person import PersonDoc
-from src.validation.checkdb import PersonVerify
-import os
-import shutil
-import numpy as np
-from fastapi import HTTPException, status
-from src.schemas.validation import ImageValidation,Validation
-from src.models.person import EmbeddingVectorDoc, FaceDoc
-from fastapi.responses import JSONResponse
-import uuid
-from src.validation.face_validation import FaceValidation
-from pathlib import Path
-import cv2
-from src.utils.utils import npfloat2float
-from src.inferences.face_recognition.faiss_wrap import ChangeEvent
-from urllib.parse import unquote
-from src.apps.face_recognition_factory import FaceRecognitionFactory
 from src.configs.config_instance import FaceRecognitionConfigInstance
+from src.apps.face_recognition_factory import FaceRecognitionFactory
+from src.inferences.face_recognition.faiss_wrap import ChangeEvent
+from src.schemas.validation import ImageValidation,Validation
+from src.validation.face_validation import FaceValidation
+from src.models.person import EmbeddingVectorDoc, FaceDoc
+from src.database.PersonDB import PersonDatabase
+from src.validation.checkdb import PersonVerify
 from .face_recognition import FaceRecognition
+from src.models.person import PersonDoc
 
-
-
-
+from src.utils.utils import npfloat2float
+from urllib.parse import unquote
+from pathlib import Path
+import numpy as np
+import shutil
+import uuid
+import cv2
+import os
 
 class FaceManagement(FaceRecognition):
     def __init__(self, face_config, db_instance: PersonDatabase) -> None:

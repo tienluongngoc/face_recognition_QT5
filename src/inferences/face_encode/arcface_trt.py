@@ -1,5 +1,5 @@
 from src.inferences.tensorrt_base.trt_model import TRTModel
-from configs import ArcFaceTRTConfig
+from src.configs.arcface_trt_config import ArcFaceTRTConfig
 from ..utils import face_align, face_detect
 import torchvision
 import copy

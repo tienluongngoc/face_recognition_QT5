@@ -1,10 +1,10 @@
-from asyncio import tasks
-from .face_recognition import FaceRecognition
 from src.configs.face_recognition_config import FaceRecogAPIConfig
-from src.database.PersonDB import PersonDatabase
 from src.inferences.face_recognition.faiss_wrap import FAISS
 from src.video_stream.video_reader import VideoReader
+from src.database.PersonDB import PersonDatabase
+from .face_recognition import FaceRecognition
 from .data_queue import DataQueue
+from asyncio import tasks
 import cv2
 
 

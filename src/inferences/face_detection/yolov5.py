@@ -1,5 +1,5 @@
-from inferences.tensorrt_base.trt_model import TRTModel
-from configs import Yolov5Config
+from src.inferences.tensorrt_base.trt_model import TRTModel
+from src.configs.yolov5_config import Yolov5Config
 from ..utils.yolov5_utils import *
 import torchvision
 import copy
