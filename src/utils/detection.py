@@ -285,8 +285,7 @@ def img_vis(img,orgimg,pred,vis_thres = 0.6):
     vis_thres: 可视化阈值
     '''
 
-    print('img.shape: ', img.shape)
-    print('orgimg.shape: ', orgimg.shape)
+
 
     no_vis_nums=0
     # Process detections
@@ -297,7 +296,6 @@ def img_vis(img,orgimg,pred,vis_thres = 0.6):
             # Rescale boxes from img_size to im0 size
             det[:, :4] = scale_coords(img.shape[2:], det[:, :4], orgimg.shape).round()
 
-            # Print results
             for c in det[:, -1].unique():
                 n = (det[:, -1] == c).sum()  # detections per class
 

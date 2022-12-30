@@ -204,7 +204,6 @@ class FaceRecognitionUI(QMainWindow):
         face_ids = [int(face["id"]) for face in all_faces]
         face_id = 0 if len(face_ids)==0 else  max(face_ids)+1
         res = self.face_management.insert_face(person_id, str(face_id), image)
-        print(res)
         self.load_faces_db_to_table(person_id)
         self.init_face_text_box()
 
@@ -227,7 +226,6 @@ class FaceRecognitionUI(QMainWindow):
         name = self.ui_main_windown.tb_add_person_name.text()
         id = self.ui_main_windown.tb_add_person_id.text()
         res = self.person_management.insert_person(id, name)
-        print(res)
         self.load_people_db_to_table()
 
     def delete_person(self):

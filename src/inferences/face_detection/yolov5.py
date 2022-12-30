@@ -122,6 +122,4 @@ class YOLOV5(TRTModel):
                     result = get_bbox(orgimg, xywh, conf, landmarks)
                     point.append(result[0])
                     kpss.append(result[1])
-                    # print(result)
-                    # results.append(result)
         return np.array(point), np.array(kpss)
