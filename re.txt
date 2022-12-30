@@ -1,8 +1,0 @@
-torchvision
-conda install -c conda-forge pycuda
-nvidia-tensorrt
-opencv-python
-numba
-conda install -c conda-forge faiss-gpu
-filterpy
-conda install -c anaconda cudnn
