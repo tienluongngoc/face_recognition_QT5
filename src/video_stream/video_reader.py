@@ -13,7 +13,7 @@ class VideoReader(Subject, Thread):
     def __init__(self, config, frame_queue: Queue):
         Thread.__init__(self)
         super(VideoReader, self).__init__()
-        self.camera_url = "rtsp://localhost:8554/FR"
+        self.camera_url = 0
         self.sleep_time = 0#config[""]
         # self.camera_id = config["camera_id"]
         # self.location = config["location"]
